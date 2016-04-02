@@ -6,7 +6,13 @@
 //  Copyright (c) 2016年 Leonly91. All rights reserved.
 //
 
-#import "AppDelegate.h" 
+#import "AppDelegate.h"
+#import "ViewController.h"
+#import "TimeLineViewController.h"
+#import "MessageViewController.h"
+#import "ProfileViewController.h"
+#import "AtMeViewController.h"
+#import <UIKit/UIKit.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +23,33 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    TimeLineViewController *view1 = [[TimeLineViewController alloc] init];
+    view1.tabBarItem.title = @"TimeLine";
+    
+    MessageViewController *view2 = [[MessageViewController alloc] init];
+    view2.tabBarItem.title = @"Message";
+    
+    AtMeViewController *view3 = [[AtMeViewController alloc] init];
+    view3.tabBarItem.title = @"@Me";
+    
+    ProfileViewController *view4 = [[ProfileViewController alloc] init];
+    view4.tabBarItem.title = @"Profile";
+    
+    [tabBarController addChildViewController:view1];
+    [tabBarController addChildViewController:view2];
+    [tabBarController addChildViewController:view3];
+    [tabBarController addChildViewController:view4];
+    
+    tabBarController.navigationItem.title = @"WoFun";
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+    //Add tool item to navigation
+    
+    
+    self.window.rootViewController = nvc;
+    [self.window makeKeyAndVisible];
+//    self.window.backgroundColor = [UIColor whiteColor];
     return YES;
 }
 
