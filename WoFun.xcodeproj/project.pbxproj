@@ -10,7 +10,6 @@
 		49F87B281C946257001F8006 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B271C946257001F8006 /* main.m */; };
 		49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2A1C946257001F8006 /* AppDelegate.m */; };
 		49F87B2E1C946257001F8006 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2D1C946257001F8006 /* ViewController.m */; };
-		49F87B311C946257001F8006 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49F87B2F1C946257001F8006 /* Main.storyboard */; };
 		49F87B331C946257001F8006 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49F87B321C946257001F8006 /* Images.xcassets */; };
 		49F87B361C946257001F8006 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49F87B341C946257001F8006 /* LaunchScreen.xib */; };
 		49F87B421C946257001F8006 /* WoFunTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B411C946257001F8006 /* WoFunTests.m */; };
@@ -22,6 +21,9 @@
 		49F87B5F1C95401F001F8006 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B5E1C95401F001F8006 /* LoginViewController.m */; };
 		49F87B621CAF649C001F8006 /* NetworkUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B611CAF649C001F8006 /* NetworkUtil.m */; };
 		49F87B651CAF6CFC001F8006 /* GlobalVar.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B641CAF6CFC001F8006 /* GlobalVar.m */; };
+		49F87B691CAF9B26001F8006 /* ProfileAvatarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B671CAF9B26001F8006 /* ProfileAvatarTableViewCell.m */; };
+		49F87B6A1CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49F87B681CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib */; };
+		49F87B751CC1EC78001F8006 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49F87B771CC1EC78001F8006 /* Localizable.strings */; };
 		4A9DC19083F141595FC13117 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 374F70A48B9187343A9078BA /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -44,7 +46,6 @@
 		49F87B2A1C946257001F8006 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		49F87B2C1C946257001F8006 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		49F87B2D1C946257001F8006 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		49F87B301C946257001F8006 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		49F87B321C946257001F8006 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		49F87B351C946257001F8006 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		49F87B3B1C946257001F8006 /* WoFunTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WoFunTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,6 +67,11 @@
 		49F87B611CAF649C001F8006 /* NetworkUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkUtil.m; sourceTree = "<group>"; };
 		49F87B631CAF64AF001F8006 /* NetworkUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkUtil.h; sourceTree = "<group>"; };
 		49F87B641CAF6CFC001F8006 /* GlobalVar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVar.m; sourceTree = "<group>"; };
+		49F87B661CAF9B26001F8006 /* ProfileAvatarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileAvatarTableViewCell.h; sourceTree = "<group>"; };
+		49F87B671CAF9B26001F8006 /* ProfileAvatarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileAvatarTableViewCell.m; sourceTree = "<group>"; };
+		49F87B681CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileAvatarTableViewCell.xib; sourceTree = "<group>"; };
+		49F87B761CC1EC78001F8006 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		49F87B781CC1ECA1001F8006 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AD7AC2D9E5E7D7A469721BD0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		CDD9C6E79EC2DFAFFD8685C7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,15 +126,17 @@
 				49F87B5E1C95401F001F8006 /* LoginViewController.m */,
 				49F87B4E1C94FB06001F8006 /* TimeLineViewController.h */,
 				49F87B4F1C94FB06001F8006 /* TimeLineViewController.m */,
+				49F87B661CAF9B26001F8006 /* ProfileAvatarTableViewCell.h */,
+				49F87B671CAF9B26001F8006 /* ProfileAvatarTableViewCell.m */,
+				49F87B681CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib */,
+				49F87B541C950FED001F8006 /* ProfileViewController.h */,
+				49F87B551C950FED001F8006 /* ProfileViewController.m */,
 				49F87B511C95034E001F8006 /* MessageViewController.h */,
 				49F87B521C95034E001F8006 /* MessageViewController.m */,
 				49F87B5A1C9517FF001F8006 /* NewMessageViewController.h */,
 				49F87B5B1C9517FF001F8006 /* NewMessageViewController.m */,
 				49F87B571C951565001F8006 /* AtMeViewController.h */,
 				49F87B581C951565001F8006 /* AtMeViewController.m */,
-				49F87B541C950FED001F8006 /* ProfileViewController.h */,
-				49F87B551C950FED001F8006 /* ProfileViewController.m */,
-				49F87B2F1C946257001F8006 /* Main.storyboard */,
 				49F87B321C946257001F8006 /* Images.xcassets */,
 				49F87B341C946257001F8006 /* LaunchScreen.xib */,
 				49F87B251C946257001F8006 /* Supporting Files */,
@@ -136,6 +144,7 @@
 				49F87B641CAF6CFC001F8006 /* GlobalVar.m */,
 				49F87B631CAF64AF001F8006 /* NetworkUtil.h */,
 				49F87B611CAF649C001F8006 /* NetworkUtil.m */,
+				49F87B771CC1EC78001F8006 /* Localizable.strings */,
 			);
 			path = WoFun;
 			sourceTree = "<group>";
@@ -266,8 +275,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49F87B311C946257001F8006 /* Main.storyboard in Resources */,
 				49F87B361C946257001F8006 /* LaunchScreen.xib in Resources */,
+				49F87B751CC1EC78001F8006 /* Localizable.strings in Resources */,
+				49F87B6A1CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib in Resources */,
 				49F87B331C946257001F8006 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,6 +346,7 @@
 			files = (
 				49F87B591C951565001F8006 /* AtMeViewController.m in Sources */,
 				49F87B2E1C946257001F8006 /* ViewController.m in Sources */,
+				49F87B691CAF9B26001F8006 /* ProfileAvatarTableViewCell.m in Sources */,
 				49F87B531C95034E001F8006 /* MessageViewController.m in Sources */,
 				49F87B5C1C9517FF001F8006 /* NewMessageViewController.m in Sources */,
 				49F87B501C94FB06001F8006 /* TimeLineViewController.m in Sources */,
@@ -367,20 +378,21 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		49F87B2F1C946257001F8006 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49F87B301C946257001F8006 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		49F87B341C946257001F8006 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				49F87B351C946257001F8006 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		49F87B771CC1EC78001F8006 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				49F87B761CC1EC78001F8006 /* en */,
+				49F87B781CC1ECA1001F8006 /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

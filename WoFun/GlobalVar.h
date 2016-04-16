@@ -14,4 +14,6 @@ FOUNDATION_EXPORT NSString *access_token_secret;
 FOUNDATION_EXPORT NSString * const oauth_consumer_key;
 FOUNDATION_EXPORT NSString * const oauth_consumer_secret;
 
+FOUNDATION_EXPORT NSString *userId;
+
 #endif

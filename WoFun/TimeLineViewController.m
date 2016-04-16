@@ -64,7 +64,7 @@
 #pragma table view
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.timeLineArray count];
+    return 2;//[self.timeLineArray count];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -75,10 +75,10 @@
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *tableCell = [tableView dequeueReusableCellWithIdentifier:self.cellUseId];
-    if (tableCell){
+    if (tableCell == nil){
         tableCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:self.cellUseId];
-        tableCell.textLabel.text = @"text";
     }
+    tableCell.textLabel.text = @"text";
     return tableCell;
 }
 

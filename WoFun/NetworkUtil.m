@@ -92,4 +92,8 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     return parameters;
 }
 
++(NSString *)getAPISignSecret{
+    return [NSString stringWithFormat:@"%@&%@",oauth_consumer_secret, access_token_secret];
+}
+
 @end

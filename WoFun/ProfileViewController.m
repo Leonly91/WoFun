@@ -7,31 +7,149 @@
 //
 
 #import "ProfileViewController.h"
+#import <Foundation/Foundation.h>
+#import "ProfileAvatarTableViewCell.h"
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
+#import "NetworkUtil.h"
+#import "GlobalVar.h"
 
 @interface ProfileViewController ()
-
+@property (nonatomic) NSArray *array;
+@property (nonatomic) NSArray *productArray;
 @end
 
 @implementation ProfileViewController
 
+static NSString* avatarCellId = @"ProfileAvatarTableViewCell";
+static NSString* cellId = @"cellId";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+    //[self.tableView registerClass:[ProfileAvatarTableViewCell class] forCellReuseIdentifier:tableCellId];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = self.tableView.separatorColor;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    self.array = [[NSArray alloc] initWithObjects:@"BlackList", @"Favourite", @"关注请求", @"Setting", nil];
+    self.productArray = [[NSArray alloc] initWithObjects:@"WoFun", @"Contract us", nil];
+    
+//    [self getFollowersList];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated
 {
     self.tabBarController.navigationItem.title = @"Profile";
-    self.tabBarController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:nil];
+    
+    //Get Profile Data via Network
+    [self getProfile];
     
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0){
+        return 1;
+    }
+    return 2;
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 3;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0){
+        return 110;
+    }else{
+        return 44;
+    }
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 10;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section == 2){
+        return 0;
+    }
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = nil;
+    if (indexPath.section == 0){
+        cell = [tableView dequeueReusableCellWithIdentifier:avatarCellId];
+        if (cell == nil){
+            //NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tableCellId owner:self options:nil];
+            [self.tableView registerNib:[UINib nibWithNibName:avatarCellId bundle:nil] forCellReuseIdentifier:avatarCellId];
+            //cell = [nib objectAtIndex:0];
+            cell = [tableView dequeueReusableCellWithIdentifier:avatarCellId forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor whiteColor];
+        }
+    }else{
+        cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+        if (cell == nil){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+            if (indexPath.section == 1){
+                cell.textLabel.text = self.array[indexPath.row];
+            }else{
+                cell.textLabel.text = self.productArray[indexPath.row];
+            }
+//            cell.backgroundColor = [UIColor blueColor];
+        }
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+    return cell;
+}
+
+#pragma 获取用户个人资料
+-(void)getProfile{
+    NSString *url = @"http://api.fanfou.com/account/verify_credentials.json";
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    NSString *signature = [NetworkUtil getOauthSignature:url parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signature forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"Profile. %@", operation.responseString);
+        
+        NSData *jsonData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dictionary =  [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        NSLog(@"%@", dictionary);
+        
+        userId = dictionary[@"id"];//Save global user id
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        ProfileAvatarTableViewCell *avatarCell = (ProfileAvatarTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        avatarCell.follower.text = [NSString stringWithFormat:@"%@ Followers", dictionary[@"followers_count"]];
+        avatarCell.following.text = [NSString stringWithFormat:@"%@ Following", dictionary[@"friends_count"]];
+        avatarCell.username.text = dictionary[@"name"];
+        avatarCell.messages.text = [NSString stringWithFormat:@"%@ Messages", dictionary[@"statuses_count"]];
+        avatarCell.favouriteMsg.text = [NSString stringWithFormat:@"%@ Favourites", dictionary[@"favourites_count"]];
+        
+        NSString *imageUrl = dictionary[@"profile_image_url_large"];
+        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
+        avatarCell.avatar.image = avatar;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Profile failure.%@", operation.responseString);
+    }];
 }
 
 /*

@@ -44,6 +44,7 @@
     
     tabBarController.navigationItem.title = @"WoFun";
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:tabBarController];
+    nvc.navigationBar.translucent = NO;
     //Add tool item to navigation
     
     
