@@ -13,6 +13,7 @@
 #import "NetworkUtil.h"
 #import "GlobalVar.h"
 #import "ProfileEditViewController.h"
+#import <UIImageView+WebCache.h>
 
 @interface ProfileViewController ()
 @property (nonatomic) NSArray *array;
@@ -171,8 +172,8 @@ static NSString* cellId = @"cellId";
         avatarCell.favouriteMsg.text = [NSString stringWithFormat:@"%@ Favourites", self.profileDic[@"favourites_count"]];
         
         NSString *imageUrl = self.profileDic[@"profile_image_url_large"];
-        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
-        avatarCell.avatar.image = avatar;
+//        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
+        [avatarCell.avatar sd_setImageWithURL:[NSURL URLWithString:imageUrl]];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Profile failure.%@", operation.responseString);
     }];

@@ -11,6 +11,7 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "NetworkUtil.h"
 #import <NSString+URLEncode.h>
+#import <UIImageView+WebCache.h>
 
 @interface ProfileEditViewController ()
 @property (nonatomic) NSArray *array;
@@ -59,7 +60,7 @@ static NSString *cellId = @"editProfileCellId";
     //SAVE PROFILE
     [self updateProfile];
     
-    //[self dismissViewControllerAnimated:TRUE completion:nil];
+    [self dismissViewControllerAnimated:TRUE completion:nil];
 }
 
 -(void)updateProfile{
@@ -133,8 +134,8 @@ static NSString *cellId = @"editProfileCellId";
     
     if (indexPath.section == 0){
         NSString *imageUrl = self.avatar;
-        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
-        cell.imageView.image = avatar;
+//        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl]];
         cell.textLabel.text = @"头像";
     }else if(indexPath.section == 1){
         cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", self.array[indexPath.row], self.valueArray[indexPath.row]];
