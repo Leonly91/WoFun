@@ -66,11 +66,13 @@ static NSString *cellId = @"editProfileCellId";
     NSString *url = @"http://api.fanfou.com/account/update_profile.json";
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
     // TODO: urlencode
-    NSString *url2 = @"url2/hello";
-    NSString *newUrl1 = [url2 URLEncode];
-    NSLog(@"newUrl1: %@", newUrl1);
+    NSString *username = self.valueArray[0];
+    NSString *location = self.valueArray[1];
+    NSString *homeurl = self.valueArray[2];
     
-    [parameters setObject:url2 forKey:@"url"];
+    [parameters setObject:username forKey:@"name"];
+    [parameters setObject:location forKey:@"location"];
+    [parameters setObject:homeurl forKey:@"url"];
     NSString *signautre = [NetworkUtil postOauthSignature:url parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
     [parameters setObject:signautre forKey:@"oauth_signature"];
     

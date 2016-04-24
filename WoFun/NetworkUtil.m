@@ -50,7 +50,9 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
     for (NSString *key in sortedKeys) {
         [sortedArray addObject: [NSString stringWithFormat:@"%@=%@", key, [[NSString stringWithFormat:@"%@", [parameters objectForKey: key]] URLEncode]  ]];
+//        [sortedArray addObject: [NSString stringWithFormat:@"%@=%@", key, [parameters objectForKey: key] ]];
     }
+    NSLog(@"sortedArray:%@", sortedArray);
     NSString *queryString = [sortedArray componentsJoinedByString:@"&"];
     NSLog(@"queyryString:%@", queryString);
     
