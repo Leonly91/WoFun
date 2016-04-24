@@ -17,9 +17,21 @@ static NSString *configFileName = @"config";
 +(void)readOAuthConfig{
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:configFileName ofType:@"plist"];
     NSDictionary *dictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
-    access_token = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token"]];
-    access_token_secret = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token_secret"]];
-    userId = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"user_id"]];
+
+    NSString *token = [dictionary objectForKey:@"access_token"];
+    NSString *secret = [dictionary objectForKey:@"access_token_secret"];
+    NSString *user_id = [dictionary objectForKey:@"user_id"];
+    if (token.length){
+        access_token = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token"]];
+    }
+    
+    if (secret.length){
+        access_token_secret = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token_secret"]];
+    }
+    
+    if (userId.length){
+        userId = [NSString stringWithFormat:@"%@", user_id];
+    }
     
     NSLog(@"readConfig. access_token = %@, access_secret = %@, userId = %@", access_token, access_token_secret, userId);
 }

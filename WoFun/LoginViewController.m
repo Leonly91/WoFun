@@ -126,6 +126,8 @@ static NSString *accessTokenAuthUrl = @"http://fanfou.com/oauth/access_token";
         
         [ConfigFileUtil writeOAuthConfig];
         
+        //Redirect to Home
+        [self dismissViewControllerAnimated:YES completion:nil];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error){
         NSLog(@"OAuthAccessToken failure.%@", operation.responseString);
         //NSLog(@"%@", error);
@@ -143,8 +145,6 @@ static NSString *accessTokenAuthUrl = @"http://fanfou.com/oauth/access_token";
         //1. Get Access Token
         [self OAuthAccessToken];
         
-        //2. Redirect to Home
-        [self dismissViewControllerAnimated:YES completion:nil];
     }
     
     return true;

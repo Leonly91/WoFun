@@ -11,6 +11,8 @@
 #import "NewMessageViewController.h"
 #import "NetworkUtil.h"
 #import "TweetViewCell.h"
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
+#import "GlobalVar.h"
 
 @interface TimeLineViewController ()
 @property (nonatomic, strong) NSMutableArray *tweetArray;
@@ -37,6 +39,10 @@ static NSString *tweetCellId = @"TweetViewCell";
 //    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:newMessageView];
 //    [self presentViewController:navi animated:TRUE completion:nil];
     
+    [self redirectLogin];
+}
+
+-(void)redirectLogin{
     LoginViewController *loginView = [[LoginViewController alloc] init];
     UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:loginView];
     [self presentViewController:navi animated:TRUE completion:nil];
@@ -49,21 +55,13 @@ static NSString *tweetCellId = @"TweetViewCell";
     self.tabBarController.navigationItem.rightBarButtonItem = newFun;
     self.tabBarController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:nil];
     
-    [self fetchDataFromNetwork];
+    NSLog(@"TimeLineViewController %@. access_token = %@", NSStringFromSelector(_cmd), access_token);
+    [self getTimeline];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-//AFNetwork
--(void)fetchDataFromNetwork
-{
-    //AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    //manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-
 }
 
 #pragma table view
@@ -93,6 +91,28 @@ static NSString *tweetCellId = @"TweetViewCell";
     tableCell.username.text = @"liyong";
     tableCell.tweetContent.scrollEnabled = false;
     return tableCell;
+}
+
+#pragma REST
+- (void)getTimeline{
+    if (!access_token.length || [access_token isEqualToString:@"(null)"]){
+        [self redirectLogin];
+        return;
+    }
+    NSLog(@"access_token:%@", access_token);
+    
+    NSString *apiUrl = @"http://api.fanfou.com/statuses/home_timeline.json";
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    NSString *signature = [NetworkUtil getOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signature forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager GET:apiUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
+    }];
 }
 
 /*
