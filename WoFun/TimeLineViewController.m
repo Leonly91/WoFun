@@ -26,8 +26,6 @@
     self.timeLineArray = [[NSMutableArray alloc] init];
     self.cellUseId = @"TimeLineCell";
     
-    UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFun:)];
-    self.tabBarController.navigationItem.rightBarButtonItem = newFun;
 }
 
 -(IBAction)newFun:(id)sender
@@ -44,6 +42,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.tabBarController.navigationItem.title = @"Home";
+    UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFun:)];
+    self.tabBarController.navigationItem.rightBarButtonItem = newFun;
+    
     [self fetchDataFromNetwork];
 }
 

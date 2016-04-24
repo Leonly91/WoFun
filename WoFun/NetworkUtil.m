@@ -44,20 +44,32 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     return base64String;
 }
 
-+(NSString *)getOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey{
++(NSString *)convertOauthSignature:(NSString *)method baseUrl:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey{
     NSString *urlencode = [baseUrl URLEncode];
     NSArray *sortedKeys = [[parameters allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     NSMutableArray *sortedArray = [[NSMutableArray alloc] init];
     for (NSString *key in sortedKeys) {
-        [sortedArray addObject: [NSString stringWithFormat:@"%@=%@", key, [parameters objectForKey: key]]];
+        [sortedArray addObject: [NSString stringWithFormat:@"%@=%@", key, [[NSString stringWithFormat:@"%@", [parameters objectForKey: key]] URLEncode]  ]];
     }
     NSString *queryString = [sortedArray componentsJoinedByString:@"&"];
-    //NSLog(@"queyryString:%@", queryString);
+    NSLog(@"queyryString:%@", queryString);
     
-    NSString *baseString = [NSString stringWithFormat:@"%@&%@&%@", @"GET", urlencode, [queryString URLEncode]];
+    NSString *baseString = [NSString stringWithFormat:@"%@&%@&%@", method, urlencode, [queryString URLEncode]];
     NSLog(@"baseString:%@", baseString);
-    NSLog(@"secretKey:%@", secretKey);
+    //NSLog(@"secretKey:%@", secretKey);
     return [self hmacsha1:baseString key: [NSString stringWithFormat:@"%@", secretKey]];//注意：后面加&号
+}
+
++(NSString *)getOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey{
+    return [self convertOauthSignature:@"GET" baseUrl:baseUrl parameters:parameters secretKey:secretKey];
+}
+
++(NSString *)postOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey{
+    return [self convertOauthSignature:@"POST" baseUrl:baseUrl parameters:parameters secretKey:secretKey];
+}
+
++(NSString *)putOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey{
+    return [self convertOauthSignature:@"PUT" baseUrl:baseUrl parameters:parameters secretKey:secretKey];
 }
 
 // TODO: Fetch to Utility

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */; };
 		49F87B281C946257001F8006 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B271C946257001F8006 /* main.m */; };
 		49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2A1C946257001F8006 /* AppDelegate.m */; };
 		49F87B2E1C946257001F8006 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2D1C946257001F8006 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		374F70A48B9187343A9078BA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4968F99D1CC2137E004A6CCC /* ProfileEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileEditViewController.h; sourceTree = "<group>"; };
+		4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileEditViewController.m; sourceTree = "<group>"; };
 		49F87B221C946257001F8006 /* WoFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49F87B261C946257001F8006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49F87B271C946257001F8006 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 				49F87B681CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib */,
 				49F87B541C950FED001F8006 /* ProfileViewController.h */,
 				49F87B551C950FED001F8006 /* ProfileViewController.m */,
+				4968F99D1CC2137E004A6CCC /* ProfileEditViewController.h */,
+				4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */,
 				49F87B511C95034E001F8006 /* MessageViewController.h */,
 				49F87B521C95034E001F8006 /* MessageViewController.m */,
 				49F87B5A1C9517FF001F8006 /* NewMessageViewController.h */,
@@ -348,6 +353,7 @@
 				49F87B2E1C946257001F8006 /* ViewController.m in Sources */,
 				49F87B691CAF9B26001F8006 /* ProfileAvatarTableViewCell.m in Sources */,
 				49F87B531C95034E001F8006 /* MessageViewController.m in Sources */,
+				4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */,
 				49F87B5C1C9517FF001F8006 /* NewMessageViewController.m in Sources */,
 				49F87B501C94FB06001F8006 /* TimeLineViewController.m in Sources */,
 				49F87B5F1C95401F001F8006 /* LoginViewController.m in Sources */,

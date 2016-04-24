@@ -12,10 +12,12 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "NetworkUtil.h"
 #import "GlobalVar.h"
+#import "ProfileEditViewController.h"
 
 @interface ProfileViewController ()
 @property (nonatomic) NSArray *array;
 @property (nonatomic) NSArray *productArray;
+@property (nonatomic) NSDictionary *profileDic;
 @end
 
 @implementation ProfileViewController
@@ -32,7 +34,7 @@ static NSString* cellId = @"cellId";
     self.view.backgroundColor = self.tableView.separatorColor;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
-    self.array = [[NSArray alloc] initWithObjects:@"BlackList", @"Favourite", @"关注请求", @"Setting", nil];
+    self.array = [[NSArray alloc] initWithObjects:@"BlackList", @"Favourite", @"关注请求", @"Setting", @"Photos",nil];
     self.productArray = [[NSArray alloc] initWithObjects:@"WoFun", @"Contract us", nil];
     
 //    [self getFollowersList];
@@ -42,9 +44,12 @@ static NSString* cellId = @"cellId";
 -(void)viewWillAppear:(BOOL)animated
 {
     self.tabBarController.navigationItem.title = @"Profile";
+    self.tabBarController.navigationItem.rightBarButtonItem = nil;
     
     //Get Profile Data via Network
-    [self getProfile];
+    if (oauth_consumer_key != nil){
+        [self getProfile];
+    }
     
 }
 
@@ -57,6 +62,10 @@ static NSString* cellId = @"cellId";
 {
     if (section == 0){
         return 1;
+    }else if(section == 1){
+        return self.array.count;
+    }else if(section == 2){
+        return self.productArray.count;
     }
     return 2;
 }
@@ -119,6 +128,23 @@ static NSString* cellId = @"cellId";
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"didSelectRow");
+    if (indexPath.section == 0){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            ProfileEditViewController *editView = [[ProfileEditViewController alloc] init];
+            editView.username = self.profileDic[@"id"];
+            editView.avatar = self.profileDic[@"profile_image_url_large"];
+            editView.username = self.profileDic[@"name"];
+            editView.homeurl = self.profileDic[@"url"];
+            editView.location = self.profileDic[@"location"];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editView];
+            [self presentViewController:nav animated:TRUE completion:nil];
+        });
+    }
+}
+
 #pragma 获取用户个人资料
 -(void)getProfile{
     NSString *url = @"http://api.fanfou.com/account/verify_credentials.json";
@@ -131,20 +157,20 @@ static NSString* cellId = @"cellId";
 //        NSLog(@"Profile. %@", operation.responseString);
         
         NSData *jsonData = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *dictionary =  [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
-        NSLog(@"%@", dictionary);
+        self.profileDic =  [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        NSLog(@"%@", self.profileDic);
         
-        userId = dictionary[@"id"];//Save global user id
+        userId = self.profileDic[@"id"];//Save global user id
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
         ProfileAvatarTableViewCell *avatarCell = (ProfileAvatarTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        avatarCell.follower.text = [NSString stringWithFormat:@"%@ Followers", dictionary[@"followers_count"]];
-        avatarCell.following.text = [NSString stringWithFormat:@"%@ Following", dictionary[@"friends_count"]];
-        avatarCell.username.text = dictionary[@"name"];
-        avatarCell.messages.text = [NSString stringWithFormat:@"%@ Messages", dictionary[@"statuses_count"]];
-        avatarCell.favouriteMsg.text = [NSString stringWithFormat:@"%@ Favourites", dictionary[@"favourites_count"]];
+        avatarCell.follower.text = [NSString stringWithFormat:@"%@ Followers", self.profileDic[@"followers_count"]];
+        avatarCell.following.text = [NSString stringWithFormat:@"%@ Following", self.profileDic[@"friends_count"]];
+        avatarCell.username.text = self.profileDic[@"name"];
+        avatarCell.messages.text = [NSString stringWithFormat:@"%@ Messages", self.profileDic[@"statuses_count"]];
+        avatarCell.favouriteMsg.text = [NSString stringWithFormat:@"%@ Favourites", self.profileDic[@"favourites_count"]];
         
-        NSString *imageUrl = dictionary[@"profile_image_url_large"];
+        NSString *imageUrl = self.profileDic[@"profile_image_url_large"];
         UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
         avatarCell.avatar.image = avatar;
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

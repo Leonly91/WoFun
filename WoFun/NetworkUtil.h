@@ -13,6 +13,8 @@
 + (NSString *) createRandomString;
 + (NSString *)hmacsha1:(NSString *)text key:(NSString *)secret ;
 + (NSString *)getOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey;
++ (NSString *)postOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey;
++ (NSString *)putOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey;
 + (NSDictionary *)queryString2Dic:(NSString *)queryString;
 + (NSString *)getTimeStamp;
 + (NSMutableDictionary *)getAPIParameters;
