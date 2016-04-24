@@ -10,21 +10,24 @@
 #import "LoginViewController.h"
 #import "NewMessageViewController.h"
 #import "NetworkUtil.h"
+#import "TweetViewCell.h"
 
 @interface TimeLineViewController ()
-@property (nonatomic, strong) NSMutableArray *timeLineArray;
-@property (nonatomic, strong) NSString *cellUseId;
+@property (nonatomic, strong) NSMutableArray *tweetArray;
 @end
 
 @implementation TimeLineViewController
+
+static NSString *tweetCellId = @"TweetViewCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
 //    self.view.backgroundColor = [UIColor blueColor];
-    self.timeLineArray = [[NSMutableArray alloc] init];
-    self.cellUseId = @"TimeLineCell";
+    self.tweetArray = [[NSMutableArray alloc] init];
+    
+    //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     
 }
 
@@ -41,9 +44,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.tabBarController.navigationItem.title = @"Home";
+    self.tabBarController.navigationItem.title = @"WoFun";
     UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFun:)];
     self.tabBarController.navigationItem.rightBarButtonItem = newFun;
+    self.tabBarController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:nil];
     
     [self fetchDataFromNetwork];
 }
@@ -65,7 +69,12 @@
 #pragma table view
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;//[self.timeLineArray count];
+    return 4;//[self.timeLineArray count];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 100;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -75,11 +84,14 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *tableCell = [tableView dequeueReusableCellWithIdentifier:self.cellUseId];
+    TweetViewCell *tableCell = (TweetViewCell *)[tableView dequeueReusableCellWithIdentifier:tweetCellId];
     if (tableCell == nil){
-        tableCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:self.cellUseId];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
+        tableCell = [nib objectAtIndex:0];
     }
-    tableCell.textLabel.text = @"text";
+    
+    tableCell.username.text = @"liyong";
+    tableCell.tweetContent.scrollEnabled = false;
     return tableCell;
 }
 

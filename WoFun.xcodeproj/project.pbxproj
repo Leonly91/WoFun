@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		490DD9A71CCCC6F900000881 /* TweetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 490DD9A51CCCC6F900000881 /* TweetViewCell.m */; };
+		490DD9A81CCCC6F900000881 /* TweetViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 490DD9A61CCCC6F900000881 /* TweetViewCell.xib */; };
+		490DD9AB1CCCCFB600000881 /* FunTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 490DD9AA1CCCCFB600000881 /* FunTweet.m */; };
+		490DD9AD1CCCED1000000881 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 490DD9AC1CCCED1000000881 /* config.plist */; };
+		490DD9AF1CCCEDA300000881 /* ConfigFileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 490DD9AE1CCCEDA300000881 /* ConfigFileUtil.m */; };
 		4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */; };
 		49F87B281C946257001F8006 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B271C946257001F8006 /* main.m */; };
 		49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2A1C946257001F8006 /* AppDelegate.m */; };
@@ -40,6 +45,14 @@
 
 /* Begin PBXFileReference section */
 		374F70A48B9187343A9078BA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		490DD9A41CCCC6F900000881 /* TweetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetViewCell.h; sourceTree = "<group>"; };
+		490DD9A51CCCC6F900000881 /* TweetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetViewCell.m; sourceTree = "<group>"; };
+		490DD9A61CCCC6F900000881 /* TweetViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetViewCell.xib; sourceTree = "<group>"; };
+		490DD9A91CCCCF9D00000881 /* FunTweet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunTweet.h; sourceTree = "<group>"; };
+		490DD9AA1CCCCFB600000881 /* FunTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunTweet.m; sourceTree = "<group>"; };
+		490DD9AC1CCCED1000000881 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
+		490DD9AE1CCCEDA300000881 /* ConfigFileUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigFileUtil.m; sourceTree = "<group>"; };
+		490DD9B01CCCEDAD00000881 /* ConfigFileUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigFileUtil.h; sourceTree = "<group>"; };
 		4968F99D1CC2137E004A6CCC /* ProfileEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileEditViewController.h; sourceTree = "<group>"; };
 		4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileEditViewController.m; sourceTree = "<group>"; };
 		49F87B221C946257001F8006 /* WoFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +142,11 @@
 				49F87B5E1C95401F001F8006 /* LoginViewController.m */,
 				49F87B4E1C94FB06001F8006 /* TimeLineViewController.h */,
 				49F87B4F1C94FB06001F8006 /* TimeLineViewController.m */,
+				490DD9A91CCCCF9D00000881 /* FunTweet.h */,
+				490DD9AA1CCCCFB600000881 /* FunTweet.m */,
+				490DD9A41CCCC6F900000881 /* TweetViewCell.h */,
+				490DD9A51CCCC6F900000881 /* TweetViewCell.m */,
+				490DD9A61CCCC6F900000881 /* TweetViewCell.xib */,
 				49F87B661CAF9B26001F8006 /* ProfileAvatarTableViewCell.h */,
 				49F87B671CAF9B26001F8006 /* ProfileAvatarTableViewCell.m */,
 				49F87B681CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib */,
@@ -149,6 +167,8 @@
 				49F87B641CAF6CFC001F8006 /* GlobalVar.m */,
 				49F87B631CAF64AF001F8006 /* NetworkUtil.h */,
 				49F87B611CAF649C001F8006 /* NetworkUtil.m */,
+				490DD9B01CCCEDAD00000881 /* ConfigFileUtil.h */,
+				490DD9AE1CCCEDA300000881 /* ConfigFileUtil.m */,
 				49F87B771CC1EC78001F8006 /* Localizable.strings */,
 			);
 			path = WoFun;
@@ -157,6 +177,7 @@
 		49F87B251C946257001F8006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				490DD9AC1CCCED1000000881 /* config.plist */,
 				49F87B261C946257001F8006 /* Info.plist */,
 				49F87B271C946257001F8006 /* main.m */,
 			);
@@ -282,6 +303,8 @@
 			files = (
 				49F87B361C946257001F8006 /* LaunchScreen.xib in Resources */,
 				49F87B751CC1EC78001F8006 /* Localizable.strings in Resources */,
+				490DD9AD1CCCED1000000881 /* config.plist in Resources */,
+				490DD9A81CCCC6F900000881 /* TweetViewCell.xib in Resources */,
 				49F87B6A1CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib in Resources */,
 				49F87B331C946257001F8006 /* Images.xcassets in Resources */,
 			);
@@ -361,7 +384,10 @@
 				49F87B621CAF649C001F8006 /* NetworkUtil.m in Sources */,
 				49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */,
 				49F87B561C950FED001F8006 /* ProfileViewController.m in Sources */,
+				490DD9AB1CCCCFB600000881 /* FunTweet.m in Sources */,
+				490DD9A71CCCC6F900000881 /* TweetViewCell.m in Sources */,
 				49F87B281C946257001F8006 /* main.m in Sources */,
+				490DD9AF1CCCEDA300000881 /* ConfigFileUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

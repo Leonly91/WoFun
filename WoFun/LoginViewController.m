@@ -10,6 +10,7 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "GlobalVar.h"
 #import "NetworkUtil.h"
+#import "ConfigFileUtil.h"
 
 @interface LoginViewController ()
 @property (nonatomic, strong) UIWebView *webView;
@@ -122,6 +123,9 @@ static NSString *accessTokenAuthUrl = @"http://fanfou.com/oauth/access_token";
         
         access_token = [respon objectForKey:@"oauth_token"];
         access_token_secret = [respon objectForKey:@"oauth_token_secret"];
+        
+        [ConfigFileUtil writeOAuthConfig];
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error){
         NSLog(@"OAuthAccessToken failure.%@", operation.responseString);
         //NSLog(@"%@", error);

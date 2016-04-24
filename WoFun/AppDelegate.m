@@ -13,6 +13,7 @@
 #import "ProfileViewController.h"
 #import "AtMeViewController.h"
 #import <UIKit/UIKit.h>
+#import "ConfigFileUtil.h"
 
 @interface AppDelegate ()
 
@@ -50,6 +51,9 @@
     
     self.window.rootViewController = nvc;
     [self.window makeKeyAndVisible];
+    
+    [ConfigFileUtil readOAuthConfig];
+    
 //    self.window.backgroundColor = [UIColor whiteColor];
     return YES;
 }
@@ -66,6 +70,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    [ConfigFileUtil readOAuthConfig];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -74,6 +80,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    [ConfigFileUtil writeOAuthConfig];
 }
 
 @end
