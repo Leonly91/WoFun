@@ -13,9 +13,10 @@
 #import "TweetViewCell.h"
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "GlobalVar.h"
+#import "FunTweet.h"
 
 @interface TimeLineViewController ()
-@property (nonatomic, strong) NSMutableArray *tweetArray;
+@property (nonatomic, strong) NSMutableArray *tweetsArray;
 @end
 
 @implementation TimeLineViewController
@@ -27,7 +28,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     // Do any additional setup after loading the view.
     
 //    self.view.backgroundColor = [UIColor blueColor];
-    self.tweetArray = [[NSMutableArray alloc] init];
+    self.tweetsArray = [[NSMutableArray alloc] init];
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     
@@ -55,7 +56,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     self.tabBarController.navigationItem.rightBarButtonItem = newFun;
     self.tabBarController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:nil];
     
-    NSLog(@"TimeLineViewController %@. access_token = %@", NSStringFromSelector(_cmd), access_token);
+//    NSLog(@"TimeLineViewController %@. access_token = %@", NSStringFromSelector(_cmd), access_token);
     [self getTimeline];
 }
 
@@ -67,7 +68,7 @@ static NSString *tweetCellId = @"TweetViewCell";
 #pragma table view
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;//[self.timeLineArray count];
+    return self.tweetsArray.count;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -87,10 +88,46 @@ static NSString *tweetCellId = @"TweetViewCell";
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
         tableCell = [nib objectAtIndex:0];
     }
+
+    FunTweet *tweet = [self json2Tweet:self.tweetsArray[indexPath.row]];
+    if (tweet != nil){
+        tableCell.username.text = tweet.username;
+        tableCell.tweetContent.text = tweet.content;
+        tableCell.avatar.image = [[UIImage alloc] init];
+//        tableCell.createTime.text = tweet.createTime;
+    }
     
-    tableCell.username.text = @"liyong";
     tableCell.tweetContent.scrollEnabled = false;
     return tableCell;
+}
+
+-(void)json2TweetArray:(NSString *)jsonString{
+    NSError *error = nil;
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (jsonObject == nil || error != nil){
+        NSLog(@"%@ failed.", NSStringFromSelector(_cmd));
+        return;
+    }
+    if ([jsonObject isKindOfClass:[NSArray class]]){
+        NSArray *array = (NSArray*)jsonObject;
+        NSLog(@"tweetArray:%lu, %@", (unsigned long)[array count], array);
+        
+        [self.tweetsArray addObjectsFromArray:array];
+    }
+    
+    [self.tableView reloadData];
+}
+
+-(FunTweet *)json2Tweet:(NSDictionary *)jsonObj{
+//    NSLog(@"json2Tweet:%@", jsonObj);
+    FunTweet *tweet = nil;
+    tweet = [[FunTweet alloc] init];
+    tweet.content = jsonObj[@"text"];
+    tweet.username = jsonObj[@"repost_screen_name"];
+    tweet.createTime = jsonObj[@"created_at"];// 需要转换
+
+    return tweet;
 }
 
 #pragma REST
@@ -109,7 +146,10 @@ static NSString *tweetCellId = @"TweetViewCell";
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager GET:apiUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+//        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+        
+        [self json2TweetArray:operation.responseString];
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
     }];
