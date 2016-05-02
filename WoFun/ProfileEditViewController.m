@@ -136,6 +136,10 @@ static NSString *cellId = @"editProfileCellId";
         NSString *imageUrl = self.avatar;
 //        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl]];
+        cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2;
+        cell.imageView.clipsToBounds = YES;
+        cell.imageView.layer.borderWidth = 5.0f;
+        cell.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
         cell.textLabel.text = @"头像";
     }else if(indexPath.section == 1){
         cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", self.array[indexPath.row], self.valueArray[indexPath.row]];

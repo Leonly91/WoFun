@@ -14,9 +14,11 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "GlobalVar.h"
 #import "FunTweet.h"
+#import <UIImageView+WebCache.h>
 
 @interface TimeLineViewController ()
 @property (nonatomic, strong) NSMutableArray *tweetsArray;
+@property (nonatomic, strong) UITableViewCell *prototypeCell;
 @end
 
 @implementation TimeLineViewController
@@ -73,7 +75,18 @@ static NSString *tweetCellId = @"TweetViewCell";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return UITableViewAutomaticDimension;
+//    TweetViewCell *cell = [[TweetViewCell alloc] init];
+//    FunTweet *tweet = [self json2Tweet:self.tweetsArray[indexPath.row]];
+//    cell.tweetContent.text = tweet.content;
+//    [cell setNeedsLayout];
+//    [cell layoutIfNeeded];
+//    CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+//    CGSize textViewSize = [cell.tweetContent sizeThatFits:CGSizeMake(cell.tweetContent.frame.size.width, FLT_MAX)];
+//    CGFloat defaultHeight = cell.contentView.frame.size.height;
+//    CGFloat height = textViewSize.height > defaultHeight ? textViewSize.height : defaultHeight;
+//    CGFloat h = size.height;
+//    return 1 + h;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -88,13 +101,21 @@ static NSString *tweetCellId = @"TweetViewCell";
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
         tableCell = [nib objectAtIndex:0];
     }
+//    if (self.prototypeCell == nil){
+        self.prototypeCell = tableCell;
+//    }
 
-    FunTweet *tweet = [self json2Tweet:self.tweetsArray[indexPath.row]];
+    FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
     if (tweet != nil){
         tableCell.username.text = tweet.username;
         tableCell.tweetContent.text = tweet.content;
-        tableCell.avatar.image = [[UIImage alloc] init];
-//        tableCell.createTime.text = tweet.createTime;
+        [tableCell.tweetContent sizeToFit];
+        [tableCell.avatar sd_setImageWithURL:[NSURL URLWithString:tweet.avatar]];
+        tableCell.avatar.layer.cornerRadius = 6.0f;
+        tableCell.avatar.layer.borderWidth = 1.0f;
+        tableCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;
+        tableCell.avatar.clipsToBounds = YES;
+        tableCell.createTime.text = tweet.createTimeLabel;
     }
     
     tableCell.tweetContent.scrollEnabled = false;
