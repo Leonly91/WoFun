@@ -19,6 +19,8 @@
 @interface TimeLineViewController ()
 @property (nonatomic, strong) NSMutableArray *tweetsArray;
 @property (nonatomic, strong) UITableViewCell *prototypeCell;
+
+@property (nonatomic, strong) UIView *bgView;
 @end
 
 @implementation TimeLineViewController
@@ -31,6 +33,9 @@ static NSString *tweetCellId = @"TweetViewCell";
     
 //    self.view.backgroundColor = [UIColor blueColor];
     self.tweetsArray = [[NSMutableArray alloc] init];
+    self.bgView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.bgView.backgroundColor = [UIColor blackColor];
+    self.bgView.alpha = 1.0f;
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     
@@ -116,10 +121,79 @@ static NSString *tweetCellId = @"TweetViewCell";
         tableCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;
         tableCell.avatar.clipsToBounds = YES;
         tableCell.createTime.text = tweet.createTimeLabel;
+        tableCell.photoHeight.constant = (tweet.photoUrl == nil)  %2 ? 0 : 110;
+        if (tweet.photoUrl != nil){
+            [tableCell.photoImage sd_setImageWithURL:[NSURL URLWithString:tweet.photoUrl]];
+            tableCell.photoImage.layer.cornerRadius = 4.0f;
+            tableCell.photoImage.clipsToBounds = YES;
+            tableCell.photoImage.contentMode = UIViewContentModeCenter;
+            tableCell.photoImage.userInteractionEnabled = YES;
+            
+            UITapGestureRecognizer *tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(
+            tapPhoto:)];
+            [tableCell.photoImage addGestureRecognizer:tapRec];
+        }
     }
     
     tableCell.tweetContent.scrollEnabled = false;
     return tableCell;
+}
+
+/**
+ * 显示图片原图，支持手指缩放
+ */
+-(IBAction)tapPhoto:(id)sender{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    CGRect mainRect = [UIScreen mainScreen].bounds;
+    CGPoint location = [sender locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+    
+    UITapGestureRecognizer *tapReg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeBgView:
+    )];
+    [self.bgView addGestureRecognizer:tapReg];
+    
+    TweetViewCell *cell = (TweetViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
+    UILongPressGestureRecognizer *longTapReg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapImage:)];
+    longTapReg.minimumPressDuration = 1.0f;
+    UIImageView *imgV = [[UIImageView alloc] initWithFrame:mainRect];
+    imgV.image = cell.photoImage.image;
+    imgV.contentMode = UIViewContentModeScaleAspectFit;
+    imgV.alpha = 1;
+    imgV.userInteractionEnabled = YES;
+    [imgV addGestureRecognizer:longTapReg];
+    [self.bgView addSubview:imgV];
+    
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    [window addSubview:self.bgView];
+    
+}
+
+
+-(IBAction)longTapImage:(id)sender{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+
+}
+
+- (void) shakeToShow:(UIView*)aView{
+    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    animation.duration = 0.5;
+    NSMutableArray *values = [NSMutableArray array];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)]];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)]];
+    animation.values = values;
+    [aView.layer addAnimation:animation forKey:nil];
+}
+
+-(IBAction)closeBgView:(id)sender{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    if (self.bgView != nil){
+        [self.bgView removeFromSuperview];
+        [self.bgView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    }
+    self.tableView.scrollEnabled = TRUE;
 }
 
 -(void)json2TweetArray:(NSString *)jsonString{

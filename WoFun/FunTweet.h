@@ -18,6 +18,7 @@
 @property (nonatomic, weak) NSString *createTime;
 @property (nonatomic, weak) NSString *content;
 @property (nonatomic, weak, readonly) NSString *createTimeLabel;
+@property (nonatomic, weak) NSString *photoUrl;
 
 -(instancetype)initWithJson:(NSDictionary *)jsonObj;
 @end

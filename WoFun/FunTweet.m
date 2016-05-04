@@ -14,12 +14,11 @@
 -(instancetype)initWithJson:(NSDictionary *)jsonObj{
     if (self = [super init]){
         self.rawId = jsonObj[@"rawid"];
-        NSLog(@"rawId:%@", self.rawId);
         self.content = jsonObj[@"text"];
         self.username = jsonObj[@"user"][@"name"];
-
         self.createTime = jsonObj[@"created_at"];
-        self.avatar = jsonObj[@"user"][@"profile_image_url"];
+        self.avatar = jsonObj[@"user"][@"profile_image_url_large"];
+        self.photoUrl = jsonObj[@"photo"][@"largeurl"];
     }
     return self;
 }

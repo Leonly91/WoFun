@@ -13,5 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *username;
 @property (weak, nonatomic) IBOutlet UILabel *createTime;
 @property (weak, nonatomic) IBOutlet UITextView *tweetContent;
+@property (weak, nonatomic) IBOutlet UIImageView *photoImage;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *photoHeight;
 @end

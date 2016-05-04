@@ -10,8 +10,8 @@
 
 @interface ProfileEditViewController : UITableViewController
 @property (nonatomic) NSUInteger *userid;
-@property (nonatomic, weak) NSString *avatar;
-@property (nonatomic, weak) NSString *username;
-@property (nonatomic, weak) NSString *location;
-@property (nonatomic, weak) NSString *homeurl;
+@property (nonatomic, copy) NSString *avatar;
+@property (nonatomic, copy) NSString *username;
+@property (nonatomic, copy) NSString *location;
+@property (nonatomic, copy) NSString *homeurl;
 @end
