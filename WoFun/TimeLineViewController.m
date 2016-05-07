@@ -98,6 +98,24 @@ static NSString *tweetCellId = @"TweetViewCell";
     return 1;
 }
 
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]){
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]){
+        [tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]){
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]){
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]){
+        cell.preservesSuperviewLayoutMargins = NO;
+    }
+}
+
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TweetViewCell *tableCell = (TweetViewCell *)[tableView dequeueReusableCellWithIdentifier:tweetCellId];
@@ -136,11 +154,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     }
     
     tableCell.tweetContent.scrollEnabled = false;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        tableCell.layoutMargins = UIEdgeInsetsZero;
-        tableCell.preservesSuperviewLayoutMargins = NO;
-    }
-    tableCell.backgroundColor = [UIColor grayColor];
+    
     return tableCell;
 }
 
