@@ -44,6 +44,7 @@
     [tabBarController addChildViewController:view4];
     
     tabBarController.navigationItem.title = @"WoFun";
+    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:tabBarController];
     nvc.navigationBar.translucent = NO;
     //Add tool item to navigation

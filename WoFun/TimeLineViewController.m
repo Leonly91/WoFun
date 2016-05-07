@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UITableViewCell *prototypeCell;
 
 @property (nonatomic, strong) UIView *bgView;
+@property (nonatomic, strong) UIImageView *largeImgView;
 @end
 
 @implementation TimeLineViewController
@@ -128,6 +129,7 @@ static NSString *tweetCellId = @"TweetViewCell";
             tableCell.photoImage.clipsToBounds = YES;
             tableCell.photoImage.contentMode = UIViewContentModeCenter;
             tableCell.photoImage.userInteractionEnabled = YES;
+            tableCell.photoImage.tag = indexPath.row;
             
             UITapGestureRecognizer *tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(
             tapPhoto:)];
@@ -157,25 +159,45 @@ static NSString *tweetCellId = @"TweetViewCell";
     
     UILongPressGestureRecognizer *longTapReg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapImage:)];
     longTapReg.minimumPressDuration = 1.0f;
-    UIImageView *imgV = [[UIImageView alloc] initWithFrame:mainRect];
-    imgV.image = cell.photoImage.image;
-    imgV.contentMode = UIViewContentModeScaleAspectFit;
-    imgV.alpha = 1;
-    imgV.userInteractionEnabled = YES;
-    [imgV addGestureRecognizer:longTapReg];
-    [self.bgView addSubview:imgV];
+    if (self.largeImgView == nil){
+        self.largeImgView = [[UIImageView alloc] initWithFrame:mainRect];
+    }
+    self.largeImgView.image = cell.photoImage.image;
+    self.largeImgView.contentMode = UIViewContentModeScaleAspectFit;
+    self.largeImgView.alpha = 1;
+    self.largeImgView.userInteractionEnabled = YES;
+    [self.largeImgView addGestureRecognizer:longTapReg];
+    [self.bgView addSubview:self.largeImgView];
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self.bgView];
-    
+//    CGFloat y = self.tableView.contentOffset.y + self.tableView.contentInset.top - 20;
+//    self.bgView.frame = CGRectMake(0, y, mainRect.size.width, mainRect.size.height);
+//    [self.bgView setNeedsDisplay];
+//    NSLog(@"%@, %f, %f, %f, %f", NSStringFromSelector(_cmd), y, self.tableView.contentOffset.y, self.tableView.contentInset.top, self.bgView.frame.origin.y);
+//    
+//    self.tableView.scrollEnabled = FALSE;
+//    [self.view addSubview:self.bgView];
 }
 
-
--(IBAction)longTapImage:(id)sender{
+/**
+ *  长按图片，可以选择保存或复制
+ *
+ *  @param sender <#sender description#>
+ */
+-(IBAction)longTapImage:(UILongPressGestureRecognizer *)recogn{
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    if (recogn.state == UIGestureRecognizerStateBegan){
     
-
+        NSArray *items = @[self.largeImgView.image];
+        UIActivityViewController * activityVc = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
+        
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window.rootViewController presentViewController:activityVc animated:YES completion:^{
+        }];
+    }
 }
+
 
 - (void) shakeToShow:(UIView*)aView{
     CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
