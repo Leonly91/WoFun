@@ -136,6 +136,11 @@ static NSString *tweetCellId = @"TweetViewCell";
     }
     
     tableCell.tweetContent.scrollEnabled = false;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        tableCell.layoutMargins = UIEdgeInsetsZero;
+        tableCell.preservesSuperviewLayoutMargins = NO;
+    }
+    tableCell.backgroundColor = [UIColor grayColor];
     return tableCell;
 }
 

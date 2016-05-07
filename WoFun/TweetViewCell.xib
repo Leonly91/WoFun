@@ -65,6 +65,7 @@
                     <constraint firstItem="mXK-Ei-ACk" firstAttribute="top" secondItem="VvE-gr-L2M" secondAttribute="bottom" constant="7" id="x9o-9m-yl2"/>
                 </constraints>
             </tableViewCellContentView>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="avatar" destination="huJ-Mw-RNZ" id="hKH-GW-FXT"/>
                 <outlet property="createTime" destination="JZ1-BE-exK" id="Gw8-aY-pjy"/>
