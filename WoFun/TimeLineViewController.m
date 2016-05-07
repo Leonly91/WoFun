@@ -15,6 +15,7 @@
 #import "GlobalVar.h"
 #import "FunTweet.h"
 #import <UIImageView+WebCache.h>
+#import "UILargeImgViewController.h"
 
 @interface TimeLineViewController ()
 @property (nonatomic, strong) NSMutableArray *tweetsArray;
@@ -34,9 +35,6 @@ static NSString *tweetCellId = @"TweetViewCell";
     
 //    self.view.backgroundColor = [UIColor blueColor];
     self.tweetsArray = [[NSMutableArray alloc] init];
-    self.bgView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.bgView.backgroundColor = [UIColor blackColor];
-    self.bgView.alpha = 1.0f;
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     
@@ -157,20 +155,23 @@ static NSString *tweetCellId = @"TweetViewCell";
     
     TweetViewCell *cell = (TweetViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
-    UILongPressGestureRecognizer *longTapReg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapImage:)];
-    longTapReg.minimumPressDuration = 1.0f;
-    if (self.largeImgView == nil){
-        self.largeImgView = [[UIImageView alloc] initWithFrame:mainRect];
-    }
-    self.largeImgView.image = cell.photoImage.image;
-    self.largeImgView.contentMode = UIViewContentModeScaleAspectFit;
-    self.largeImgView.alpha = 1;
-    self.largeImgView.userInteractionEnabled = YES;
-    [self.largeImgView addGestureRecognizer:longTapReg];
-    [self.bgView addSubview:self.largeImgView];
+//    UILongPressGestureRecognizer *longTapReg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapImage:)];
+//    longTapReg.minimumPressDuration = 1.0f;
+//    if (self.largeImgView == nil){
+//        self.largeImgView = [[UIImageView alloc] initWithFrame:mainRect];
+//    }
+//    self.largeImgView.image = cell.photoImage.image;
+//    self.largeImgView.contentMode = UIViewContentModeScaleAspectFit;
+//    self.largeImgView.alpha = 1;
+//    self.largeImgView.userInteractionEnabled = YES;
+//    [self.largeImgView addGestureRecognizer:longTapReg];
+//    [self.bgView addSubview:self.largeImgView];
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    [window addSubview:self.bgView];
+//    [window addSubview:self.bgView];
+    UILargeImgViewController *largeImgv = [[UILargeImgViewController alloc] init];
+    largeImgv.image = cell.photoImage.image;
+    [window.rootViewController presentViewController:largeImgv animated:YES completion:nil];
 //    CGFloat y = self.tableView.contentOffset.y + self.tableView.contentInset.top - 20;
 //    self.bgView.frame = CGRectMake(0, y, mainRect.size.width, mainRect.size.height);
 //    [self.bgView setNeedsDisplay];
@@ -178,24 +179,6 @@ static NSString *tweetCellId = @"TweetViewCell";
 //    
 //    self.tableView.scrollEnabled = FALSE;
 //    [self.view addSubview:self.bgView];
-}
-
-/**
- *  长按图片，可以选择保存或复制
- *
- *  @param sender <#sender description#>
- */
--(IBAction)longTapImage:(UILongPressGestureRecognizer *)recogn{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-    if (recogn.state == UIGestureRecognizerStateBegan){
-    
-        NSArray *items = @[self.largeImgView.image];
-        UIActivityViewController * activityVc = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
-        
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
-        [window.rootViewController presentViewController:activityVc animated:YES completion:^{
-        }];
-    }
 }
 
 
