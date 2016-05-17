@@ -14,6 +14,7 @@
 #import "AtMeViewController.h"
 #import <UIKit/UIKit.h>
 #import "ConfigFileUtil.h"
+#import "NewTweetViewController.h"
 
 @interface AppDelegate ()
 
@@ -51,6 +52,8 @@
     
     
     self.window.rootViewController = nvc;
+//    NewTweetViewController *newTweet = [[NewTweetViewController alloc] init];
+//    self.window.rootViewController = newTweet;
     [self.window makeKeyAndVisible];
     
     [ConfigFileUtil readOAuthConfig];

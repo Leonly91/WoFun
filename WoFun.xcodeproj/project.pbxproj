@@ -13,6 +13,11 @@
 		490DD9AD1CCCED1000000881 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 490DD9AC1CCCED1000000881 /* config.plist */; };
 		490DD9AF1CCCEDA300000881 /* ConfigFileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 490DD9AE1CCCEDA300000881 /* ConfigFileUtil.m */; };
 		4916D7B81CDDE9C2008AE3BE /* UILargeImgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916D7B71CDDE9C2008AE3BE /* UILargeImgViewController.m */; };
+		4916D7BC1CDE2465008AE3BE /* NewTweetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916D7BA1CDE2465008AE3BE /* NewTweetViewController.m */; };
+		4916D7BD1CDE2465008AE3BE /* NewTweetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4916D7BB1CDE2465008AE3BE /* NewTweetViewController.xib */; };
+		4916D7C01CDEF606008AE3BE /* TweetPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916D7BF1CDEF606008AE3BE /* TweetPageViewController.m */; };
+		4916D7C21CE23656008AE3BE /* delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4916D7C11CE23656008AE3BE /* delete-button.png */; };
+		492E74851CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m in Sources */ = {isa = PBXBuildFile; fileRef = 492E74841CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m */; };
 		4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */; };
 		49F87B281C946257001F8006 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B271C946257001F8006 /* main.m */; };
 		49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2A1C946257001F8006 /* AppDelegate.m */; };
@@ -56,6 +61,14 @@
 		490DD9B01CCCEDAD00000881 /* ConfigFileUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigFileUtil.h; sourceTree = "<group>"; };
 		4916D7B61CDDE9C2008AE3BE /* UILargeImgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILargeImgViewController.h; sourceTree = "<group>"; };
 		4916D7B71CDDE9C2008AE3BE /* UILargeImgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILargeImgViewController.m; sourceTree = "<group>"; };
+		4916D7B91CDE2465008AE3BE /* NewTweetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTweetViewController.h; sourceTree = "<group>"; };
+		4916D7BA1CDE2465008AE3BE /* NewTweetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewTweetViewController.m; sourceTree = "<group>"; };
+		4916D7BB1CDE2465008AE3BE /* NewTweetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewTweetViewController.xib; sourceTree = "<group>"; };
+		4916D7BE1CDEF606008AE3BE /* TweetPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetPageViewController.h; sourceTree = "<group>"; };
+		4916D7BF1CDEF606008AE3BE /* TweetPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetPageViewController.m; sourceTree = "<group>"; };
+		4916D7C11CE23656008AE3BE /* delete-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete-button.png"; sourceTree = "<group>"; };
+		492E74831CE8791E0046DA3C /* AFURLConnectionOperation+Recover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AFURLConnectionOperation+Recover.h"; sourceTree = "<group>"; };
+		492E74841CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFURLConnectionOperation+Recover.m"; sourceTree = "<group>"; };
 		4968F99D1CC2137E004A6CCC /* ProfileEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileEditViewController.h; sourceTree = "<group>"; };
 		4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileEditViewController.m; sourceTree = "<group>"; };
 		49F87B221C946257001F8006 /* WoFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +127,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4916D7C31CE23665008AE3BE /* images */ = {
+			isa = PBXGroup;
+			children = (
+				4916D7C11CE23656008AE3BE /* delete-button.png */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
 		49F87B191C946256001F8006 = {
 			isa = PBXGroup;
 			children = (
@@ -145,8 +166,15 @@
 				49F87B5E1C95401F001F8006 /* LoginViewController.m */,
 				49F87B4E1C94FB06001F8006 /* TimeLineViewController.h */,
 				49F87B4F1C94FB06001F8006 /* TimeLineViewController.m */,
+				492E74831CE8791E0046DA3C /* AFURLConnectionOperation+Recover.h */,
+				492E74841CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m */,
 				4916D7B61CDDE9C2008AE3BE /* UILargeImgViewController.h */,
 				4916D7B71CDDE9C2008AE3BE /* UILargeImgViewController.m */,
+				4916D7BE1CDEF606008AE3BE /* TweetPageViewController.h */,
+				4916D7BF1CDEF606008AE3BE /* TweetPageViewController.m */,
+				4916D7B91CDE2465008AE3BE /* NewTweetViewController.h */,
+				4916D7BA1CDE2465008AE3BE /* NewTweetViewController.m */,
+				4916D7BB1CDE2465008AE3BE /* NewTweetViewController.xib */,
 				490DD9A91CCCCF9D00000881 /* FunTweet.h */,
 				490DD9AA1CCCCFB600000881 /* FunTweet.m */,
 				490DD9A41CCCC6F900000881 /* TweetViewCell.h */,
@@ -165,6 +193,7 @@
 				49F87B5B1C9517FF001F8006 /* NewMessageViewController.m */,
 				49F87B571C951565001F8006 /* AtMeViewController.h */,
 				49F87B581C951565001F8006 /* AtMeViewController.m */,
+				4916D7C31CE23665008AE3BE /* images */,
 				49F87B321C946257001F8006 /* Images.xcassets */,
 				49F87B341C946257001F8006 /* LaunchScreen.xib */,
 				49F87B251C946257001F8006 /* Supporting Files */,
@@ -306,12 +335,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4916D7C21CE23656008AE3BE /* delete-button.png in Resources */,
 				49F87B361C946257001F8006 /* LaunchScreen.xib in Resources */,
 				49F87B751CC1EC78001F8006 /* Localizable.strings in Resources */,
 				490DD9AD1CCCED1000000881 /* config.plist in Resources */,
 				490DD9A81CCCC6F900000881 /* TweetViewCell.xib in Resources */,
 				49F87B6A1CAF9B26001F8006 /* ProfileAvatarTableViewCell.xib in Resources */,
 				49F87B331C946257001F8006 /* Images.xcassets in Resources */,
+				4916D7BD1CDE2465008AE3BE /* NewTweetViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,9 +409,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				49F87B591C951565001F8006 /* AtMeViewController.m in Sources */,
+				4916D7BC1CDE2465008AE3BE /* NewTweetViewController.m in Sources */,
 				49F87B2E1C946257001F8006 /* ViewController.m in Sources */,
 				49F87B691CAF9B26001F8006 /* ProfileAvatarTableViewCell.m in Sources */,
 				49F87B531C95034E001F8006 /* MessageViewController.m in Sources */,
+				492E74851CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m in Sources */,
 				4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */,
 				49F87B5C1C9517FF001F8006 /* NewMessageViewController.m in Sources */,
 				49F87B501C94FB06001F8006 /* TimeLineViewController.m in Sources */,
@@ -388,6 +421,7 @@
 				49F87B651CAF6CFC001F8006 /* GlobalVar.m in Sources */,
 				49F87B621CAF649C001F8006 /* NetworkUtil.m in Sources */,
 				49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */,
+				4916D7C01CDEF606008AE3BE /* TweetPageViewController.m in Sources */,
 				49F87B561C950FED001F8006 /* ProfileViewController.m in Sources */,
 				490DD9AB1CCCCFB600000881 /* FunTweet.m in Sources */,
 				490DD9A71CCCC6F900000881 /* TweetViewCell.m in Sources */,

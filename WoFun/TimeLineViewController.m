@@ -8,7 +8,7 @@
 
 #import "TimeLineViewController.h"
 #import "LoginViewController.h"
-#import "NewMessageViewController.h"
+//#import "NewMessageViewController.h"
 #import "NetworkUtil.h"
 #import "TweetViewCell.h"
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
@@ -16,6 +16,7 @@
 #import "FunTweet.h"
 #import <UIImageView+WebCache.h>
 #import "UILargeImgViewController.h"
+#import "NewTweetViewController.h"
 
 @interface TimeLineViewController ()
 @property (nonatomic, strong) NSMutableArray *tweetsArray;
@@ -40,13 +41,10 @@ static NSString *tweetCellId = @"TweetViewCell";
     
 }
 
--(IBAction)newFun:(id)sender
-{
-//    NewMessageViewController *newMessageView = [[NewMessageViewController alloc] init];
-//    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:newMessageView];
-//    [self presentViewController:navi animated:TRUE completion:nil];
-    
-    [self redirectLogin];
+-(IBAction)newFun:(id)sender{
+    NewTweetViewController *newTweetVC = [[NewTweetViewController alloc] init];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:newTweetVC];
+    [self presentViewController:nvc animated:YES completion:nil];
 }
 
 -(void)redirectLogin{
