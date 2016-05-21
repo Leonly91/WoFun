@@ -9,6 +9,8 @@
 #import "NewTweetViewController.h"
 #import "NetworkUtil.h"
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
+#import "GlobalVar.h"
+#import <NSString+URLEncode.h>
 
 @interface NewTweetViewController ()
 @property (nonatomic) UIImageView *imageView;
@@ -20,7 +22,7 @@
 
 static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
 static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
-static NSString *postApi = @"http://rest.fanfou.com/statuses/";
+//static NSString *postApi = @"http://rest.fanfou.com/statuses/";
 
 @implementation NewTweetViewController
 
@@ -124,7 +126,6 @@ static NSString *postApi = @"http://rest.fanfou.com/statuses/";
         self.delImgBtn.titleLabel.text = @"Delete";
         [self.delImgBtn addTarget:self action:@selector(delImgBtnClick) forControlEvents:UIControlEventTouchUpInside];
         [self.imageView addSubview:self.delImgBtn];
-        NSLog(@"create del img btn");
     }
     self.delImgBtn.frame = CGRectMake(self.imageView.frame.size.width - 35, 6, 28, 28);
     
@@ -140,7 +141,10 @@ static NSString *postApi = @"http://rest.fanfou.com/statuses/";
     if (self.tweetTxtView.text.length == 0 & self.image == nil){
         return;
     }
-    NSString *apiUrl = postApi;
+    NSString *apiUrl = @"";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
     if (self.tweetTxtView.text.length != 0){
@@ -149,28 +153,31 @@ static NSString *postApi = @"http://rest.fanfou.com/statuses/";
     }
     if (self.image != nil && self.imageUrl != nil && self.imageUrl.length != 0){
         NSLog(@"imageUrl:%@", self.imageUrl);
-//        [parameters setObject:self.image forKey:@"photo"];
         apiUrl = photoApi;
     }
     NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
-    [parameters setObject:signautre forKey:@"oauth_signature"];
+//    [parameters setObject:signautre forKey:@"oauth_signature"];
+    [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
     
-    NSData *imageData = UIImageJPEGRepresentation(self.image, 0.5);
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *contentType = @"multipart/form-data;";
-    [manager.requestSerializer setValue:contentType forHTTPHeaderField:@"Content-Type"];
-//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"multipart/form-data;"];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    NSString *paraQueryString = [NetworkUtil dic2QueryString:parameters];
+    apiUrl = [apiUrl stringByAppendingFormat:@"?%@", paraQueryString];
+    
+    NSLog(@"apiUrl:%@", apiUrl);
     AFHTTPRequestOperation *operation = [manager POST:apiUrl parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileData:imageData name:@"photo" fileName:@"tst.jpg" mimeType:@"image/jpeg"];
+        if (self.image != nil){
+            NSData *imageData = UIImageJPEGRepresentation(self.image, 0.5);
+            [formData appendPartWithFileData:imageData name:@"photo" fileName:@"tst.jpg" mimeType:@"image/jpeg"];
+        }
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"updateProfile success.%@", operation.responseString);
+        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"updateProfile failure.code:%ld, %@, %@", (long)operation.response.statusCode, operation.responseString, error);
+        NSLog(@"%@ failure.code:%ld, %@, %@", NSStringFromSelector(_cmd), (long)operation.response.statusCode, operation.responseString, error);
     }];
+    
     [operation start];
-
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+//    [self cancelAction];
 }
 
 -(void)clickImgView:(id)sender{
@@ -215,6 +222,7 @@ static NSString *postApi = @"http://rest.fanfou.com/statuses/";
  *
  *  @param textView
  */
+// TODO: 长度限制在140个字符之内
 -(void)textViewDidChange:(UITextView *)textView{
     if (textView.contentSize.height != self.textHeight){
 //        NSLog(@"%@, %f, %lu", NSStringFromSelector(_cmd), textView.contentSize.height, (unsigned long)self.textHeight);

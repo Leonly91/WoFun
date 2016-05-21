@@ -23,10 +23,14 @@ static NSString *configFileName = @"config";
     NSString *user_id = [dictionary objectForKey:@"user_id"];
     if (token.length){
         access_token = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token"]];
+    }else{
+        access_token = @"1277466-d4bf74db0b1a35b0a8e4af706e105c9b";
     }
     
     if (secret.length){
         access_token_secret = [NSString stringWithFormat:@"%@", [dictionary objectForKey:@"access_token_secret"]];
+    }else{
+        access_token_secret = @"46ce20e4adbc7868299f2ac10b55df16";
     }
     
     if (userId.length){

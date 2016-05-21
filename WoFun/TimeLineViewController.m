@@ -253,7 +253,7 @@ static NSString *tweetCellId = @"TweetViewCell";
         [self redirectLogin];
         return;
     }
-    NSLog(@"access_token:%@", access_token);
+    NSLog(@"access_token:%@, access_token_secret:%@", access_token, access_token_secret);
     
     NSString *apiUrl = @"http://api.fanfou.com/statuses/home_timeline.json";
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];

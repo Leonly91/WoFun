@@ -86,6 +86,19 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     return dic;
 }
 
++ (NSString *)dic2QueryString:(NSDictionary *)parameters{
+    NSMutableString *queryString = [[NSMutableString alloc] init];
+    int count = 0;
+    for (NSString *key in parameters){
+        [queryString appendFormat:@"%@=%@", key, parameters[key]];
+        count++;
+        if (count != parameters.count){
+            [queryString appendString:@"&"];
+        }
+    }
+    return [NSString stringWithString:queryString];
+}
+
 +(NSString *)getTimeStamp
 {
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];

@@ -16,6 +16,7 @@
 + (NSString *)postOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey;
 + (NSString *)putOauthSignature:(NSString *)baseUrl parameters:(NSDictionary *)parameters secretKey:(NSString *)secretKey;
 + (NSDictionary *)queryString2Dic:(NSString *)queryString;
++ (NSString *)dic2QueryString:(NSDictionary *)parameters;
 + (NSString *)getTimeStamp;
 + (NSMutableDictionary *)getAPIParameters;
 + (NSString *)getAPISignSecret;
