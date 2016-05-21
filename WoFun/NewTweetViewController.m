@@ -177,7 +177,7 @@ static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
     
     [operation start];
     
-//    [self cancelAction];
+    [self cancelAction];
 }
 
 -(void)clickImgView:(id)sender{

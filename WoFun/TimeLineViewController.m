@@ -19,11 +19,12 @@
 #import "NewTweetViewController.h"
 
 @interface TimeLineViewController ()
-@property (nonatomic, strong) NSMutableArray *tweetsArray;
-@property (nonatomic, strong) UITableViewCell *prototypeCell;
+@property (nonatomic) NSMutableArray *tweetsArray;
+@property (nonatomic) NSMutableDictionary *tweetsDic;
+@property (nonatomic) UITableViewCell *prototypeCell;
 
-@property (nonatomic, strong) UIView *bgView;
-@property (nonatomic, strong) UIImageView *largeImgView;
+@property (nonatomic) UIView *bgView;
+@property (nonatomic) UIImageView *largeImgView;
 @end
 
 @implementation TimeLineViewController
@@ -36,9 +37,19 @@ static NSString *tweetCellId = @"TweetViewCell";
     
 //    self.view.backgroundColor = [UIColor blueColor];
     self.tweetsArray = [[NSMutableArray alloc] init];
+    self.tweetsDic = [[NSMutableDictionary alloc] init];
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self setRefreshControl:refreshControl];
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     
+}
+
+-(void)refresh:(id)sender{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    [self getTimeline];
 }
 
 -(IBAction)newFun:(id)sender{
@@ -218,22 +229,23 @@ static NSString *tweetCellId = @"TweetViewCell";
     self.tableView.scrollEnabled = TRUE;
 }
 
--(void)json2TweetArray:(NSString *)jsonString{
+-(NSArray *)json2TweetArray:(NSString *)jsonString{
     NSError *error = nil;
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (jsonObject == nil || error != nil){
         NSLog(@"%@ failed.", NSStringFromSelector(_cmd));
-        return;
+        return nil;
     }
     if ([jsonObject isKindOfClass:[NSArray class]]){
         NSArray *array = (NSArray*)jsonObject;
-        NSLog(@"tweetArray:%lu, %@", (unsigned long)[array count], array);
-        
-        [self.tweetsArray addObjectsFromArray:array];
+//        NSLog(@"tweetArray:%lu, %@", (unsigned long)[array count], array);
+
+        NSArray *tweetsArray = [NSArray arrayWithArray:array];
+        return tweetsArray;
     }
     
-    [self.tableView reloadData];
+    return nil;
 }
 
 -(FunTweet *)json2Tweet:(NSDictionary *)jsonObj{
@@ -253,7 +265,7 @@ static NSString *tweetCellId = @"TweetViewCell";
         [self redirectLogin];
         return;
     }
-    NSLog(@"access_token:%@, access_token_secret:%@", access_token, access_token_secret);
+    NSLog(@"%@ executes.access_token:%@, access_token_secret:%@", NSStringFromSelector(_cmd), access_token, access_token_secret);
     
     NSString *apiUrl = @"http://api.fanfou.com/statuses/home_timeline.json";
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
@@ -265,11 +277,31 @@ static NSString *tweetCellId = @"TweetViewCell";
     [manager GET:apiUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
         
-        [self json2TweetArray:operation.responseString];
+        [self addObjects2DataSource:[self json2TweetArray:operation.responseString]];
         
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
     }];
+}
+
+/**
+ *  添加新的数据到数据源里：根据rawid查找是否已经存在
+ *
+ *  @param objects <#objects description#>
+ */
+-(void)addObjects2DataSource:(NSArray *)objects{
+    if (!objects){
+        return;
+    }
+    for (NSObject *obj in objects){
+        FunTweet *tweet = [[FunTweet alloc] initWithJson: (NSDictionary *)obj];
+        if (self.tweetsDic[tweet.rawId] == nil){
+            self.tweetsDic[tweet.rawId] = obj;
+            [self.tweetsArray addObject:obj];
+        }
+    }
 }
 
 /*
