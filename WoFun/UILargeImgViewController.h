@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UILargeImgViewController : UIViewController
+@interface UILargeImgViewController : UIViewController <UIScrollViewDelegate>
 @property (nonatomic) UIImage *image;
 @end

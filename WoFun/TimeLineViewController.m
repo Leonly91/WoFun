@@ -44,6 +44,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     [self setRefreshControl:refreshControl];
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
+    [self getTimeline];
     
 }
 
@@ -72,7 +73,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     self.tabBarController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:nil];
     
 //    NSLog(@"TimeLineViewController %@. access_token = %@", NSStringFromSelector(_cmd), access_token);
-    [self getTimeline];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
