@@ -46,7 +46,7 @@ static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
     
     CGRect mainRect = [UIScreen mainScreen].bounds;
     
-    self.tvHeight.constant = mainRect.size.height - self.toolBar.frame.size.height;
+    self.tvHeight.constant = mainRect.size.height - self.toolBar.frame.size.height;//- self.navigationController.navigationBar.frame.size.height;
     self.contentViewHeight.constant = mainRect.size.height;
     self.scrollView.delegate = self;
 //    NSLog(@"%@, %f", NSStringFromSelector(_cmd), self.tweetTxtView.frame.size.height);
