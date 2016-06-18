@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    NSLog(@"awake from nib");
+//    NSLog(@"awake from nib");
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

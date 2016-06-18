@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+@class FunTweet;
 
 @interface TweetPageViewController : UITableViewController
-
+@property (nonatomic) NSString *msgId;
+@property (nonatomic) FunTweet *funTweet;
 @end

@@ -17,6 +17,7 @@
 #import <UIImageView+WebCache.h>
 #import "UILargeImgViewController.h"
 #import "NewTweetViewController.h"
+#import "TweetPageViewController.h"
 
 @interface TimeLineViewController ()
 @property (nonatomic) NSMutableArray *tweetsArray;
@@ -168,11 +169,26 @@ static NSString *tweetCellId = @"TweetViewCell";
     return tableCell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"%@, %lu", NSStringFromSelector(_cmd), indexPath.row);
+    
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithTitle:@"Homeline" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backItem;
+    TweetPageViewController *tweetPage = [[TweetPageViewController alloc] initWithStyle:UITableViewStylePlain];
+    FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
+    if (tweet != nil){
+        tweetPage.funTweet = tweet;
+        [self.navigationController pushViewController:tweetPage animated:YES];
+    }else{
+        NSLog(@"%@:%@ fail.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+    }
+}
+
 /**
  * 显示图片原图，支持手指缩放
  */
 -(IBAction)tapPhoto:(id)sender{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+//    NSLog(@"%@", NSStringFromSelector(_cmd));
     
     CGRect mainRect = [UIScreen mainScreen].bounds;
     CGPoint location = [sender locationInView:self.tableView];

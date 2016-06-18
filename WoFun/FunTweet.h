@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 
 @interface FunTweet : NSObject
+@property (nonatomic) NSString *id;
 @property (nonatomic) NSString *rawId;
 @property (nonatomic, weak) NSString *avatar;
 @property (nonatomic, weak) NSString *username;
@@ -19,6 +20,7 @@
 @property (nonatomic, weak) NSString *content;
 @property (nonatomic, weak, readonly) NSString *createTimeLabel;
 @property (nonatomic, weak) NSString *photoUrl;
+@property (nonatomic) bool favorited;
 
 -(instancetype)initWithJson:(NSDictionary *)jsonObj;
 @end
