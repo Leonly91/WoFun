@@ -25,7 +25,7 @@
 @property (nonatomic) UITableViewCell *prototypeCell;
 
 @property (nonatomic) UIView *bgView;
-@property (nonatomic) UIImageView *largeImgView;
+//@property (nonatomic) UIImageView *largeImgView;
 @end
 
 @implementation TimeLineViewController
@@ -195,35 +195,17 @@ static NSString *tweetCellId = @"TweetViewCell";
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     
     UITapGestureRecognizer *tapReg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeBgView:
-    )];
+    )]; 
     [self.bgView addGestureRecognizer:tapReg];
     
     TweetViewCell *cell = (TweetViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
-//    UILongPressGestureRecognizer *longTapReg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapImage:)];
-//    longTapReg.minimumPressDuration = 1.0f;
-//    if (self.largeImgView == nil){
-//        self.largeImgView = [[UIImageView alloc] initWithFrame:mainRect];
-//    }
-//    self.largeImgView.image = cell.photoImage.image;
-//    self.largeImgView.contentMode = UIViewContentModeScaleAspectFit;
-//    self.largeImgView.alpha = 1;
-//    self.largeImgView.userInteractionEnabled = YES;
-//    [self.largeImgView addGestureRecognizer:longTapReg];
-//    [self.bgView addSubview:self.largeImgView];
-    
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
 //    [window addSubview:self.bgView];
     UILargeImgViewController *largeImgv = [[UILargeImgViewController alloc] init];
     largeImgv.image = cell.photoImage.image;
-    [window.rootViewController presentViewController:largeImgv animated:YES completion:nil];
-//    CGFloat y = self.tableView.contentOffset.y + self.tableView.contentInset.top - 20;
-//    self.bgView.frame = CGRectMake(0, y, mainRect.size.width, mainRect.size.height);
-//    [self.bgView setNeedsDisplay];
-//    NSLog(@"%@, %f, %f, %f, %f", NSStringFromSelector(_cmd), y, self.tableView.contentOffset.y, self.tableView.contentInset.top, self.bgView.frame.origin.y);
-//    
-//    self.tableView.scrollEnabled = FALSE;
-//    [self.view addSubview:self.bgView];
+//    [window.rootViewController presentViewController:largeImgv animated:YES completion:nil];
+    [self.navigationController presentViewController:largeImgv animated:YES completion:nil];
 }
 
 
@@ -246,26 +228,9 @@ static NSString *tweetCellId = @"TweetViewCell";
     self.tableView.scrollEnabled = TRUE;
 }
 
--(NSArray *)json2TweetArray:(NSString *)jsonString{
-    NSError *error = nil;
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-    if (jsonObject == nil || error != nil){
-        NSLog(@"%@ failed.", NSStringFromSelector(_cmd));
-        return nil;
-    }
-    if ([jsonObject isKindOfClass:[NSArray class]]){
-        NSArray *array = (NSArray*)jsonObject;
-//        NSLog(@"tweetArray:%lu, %@", (unsigned long)[array count], array);
 
-        NSArray *tweetsArray = [NSArray arrayWithArray:array];
-        return tweetsArray;
-    }
-    
-    return nil;
-}
 
--(FunTweet *)json2Tweet:(NSDictionary *)jsonObj{
+-(FunTweet *)json2Tweet2:(NSDictionary *)jsonObj{
 //    NSLog(@"json2Tweet:%@", jsonObj);
     FunTweet *tweet = nil;
     tweet = [[FunTweet alloc] init];
@@ -294,7 +259,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     [manager GET:apiUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
         
-        [self addObjects2DataSource:[self json2TweetArray:operation.responseString]];
+        [self addObjects2DataSource:[NetworkUtil json2TweetArray:operation.responseString]];
         
         [self.refreshControl endRefreshing];
         [self.tableView reloadData];

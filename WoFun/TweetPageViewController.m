@@ -26,6 +26,7 @@
 
 static NSString *favoriteCreateAPI = @"http://api.fanfou.com/favorites/create/";
 static NSString *favoriteDestroyAPI = @"http://api.fanfou.com/favorites/destroy/";
+static NSString *redirectMsgAPI = @"";
 
 @implementation TweetPageViewController
 
@@ -192,14 +193,55 @@ static NSString *favoriteDestroyAPI = @"http://api.fanfou.com/favorites/destroy/
     }
 }
 
+/**
+ *  回复消息
+ *
+ *  @param msgId <#msgId description#>
+ */
 - (void)replayMsg:(NSString *)msgId{
     
 }
 
+/**
+ *  转发消息
+ *
+ *  @param msgId <#msgId description#>
+ */
 - (void)redirectMsg:(NSString *)msgId{
+    NSString *text = [NSString stringWithFormat:@"转%@ %@", self.funTweet.username, self.funTweet.content];
+    UIImage *image = nil;
+    if (self.funTweet.photoUrl != nil && self.funTweet.photoUrl.length != 0){
+        NSURL *url = [NSURL URLWithString:self.funTweet.photoUrl];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        image = [UIImage imageWithData:data];
+    }
     
+    NSString *url = @"http://api.fanfou.com/statuses/update.json?status=转飯否小字报 转@小吃轮 “爱一个人，是一件简单的事。就好像用杯子装满一杯水，清清凉凉地喝下去。你的身体需要它，感觉自己健康和愉悦。以此认定它是一个好习惯。所以愿意日日夜夜重复。”&oauth_signature=YSnrXG7LgYr%2FnEm8NoIXngFxHV4%3D&oauth_nonce=NXZGAGERZXFXGEPUYZZDCUWCYZWRSXXVOOCZKVAB&oauth_timestamp=1466340484&oauth_consumer_key=2c450ff5d3f7ee0a62348158b924a369&oauth_token=1277466-d4bf74db0b1a35b0a8e4af706e105c9b&oauth_signature_method=HMAC-SHA1";
+    
+    NSString *url2 = @"http://api.fanfou.com/statuses/update.json?status=我&oauth_signature=f6aMoVVIrTU3St7t39cptv%2BwoEc%3D&oauth_nonce=JNEHMLSIJGTMANUWCBKPYNKXXLQKSUHBUGCSGXHN&oauth_timestamp=1466342151&oauth_consumer_key=2c450ff5d3f7ee0a62348158b924a369&oauth_token=1277466-d4bf74db0b1a35b0a8e4af706e105c9b&oauth_signature_method=HMAC-SHA1";
+    
+    NSString *str = [[NSURL URLWithString:url2 relativeToURL:nil] absoluteString];
+    
+    [NetworkUtil postNewTweet:text image:image success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[UIToast makeText:@"转发成功"] show];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSError *jsonError = nil;
+        NSData *data = [operation.responseString dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&jsonError];
+        
+        if (jsonObject != nil && jsonError == nil){
+            NSString *text = jsonObject[@"error"];
+            [[UIToast makeText:text] show];
+        }
+
+    }];
 }
 
+/**
+ *  取消收藏
+ *
+ *  @param msgId <#msgId description#>
+ */
 - (void)destroyFavorite:(NSString *)msgId{
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
     NSString *apiUrl = [NSString stringWithFormat:@"%@%@.json", favoriteDestroyAPI, msgId];

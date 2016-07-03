@@ -20,14 +20,18 @@
         self.createTime = jsonObj[@"created_at"];
         self.avatar = jsonObj[@"user"][@"profile_image_url_large"];
         self.photoUrl = jsonObj[@"photo"][@"largeurl"];
-        self.favorited = jsonObj[@"favorited"];
+        self.favorited = [jsonObj[@"favorited"] boolValue];
     }
-    return self;
+   return self;
 }
 
 -(NSString*)getCreateTimeLabel{
     
     return _createTimeLabel;
+}
+
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%@-%@-%@-%ld", self.rawId, self.content, self.username, (unsigned long)self.favorited];
 }
 
 @end

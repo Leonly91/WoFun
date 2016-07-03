@@ -12,6 +12,7 @@
 #import <NSString+URLEncode.h>
 #import "NetworkUtil.h"
 #import "GlobalVar.h"
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 
 @implementation NetworkUtil
 
@@ -121,6 +122,124 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
 
 +(NSString *)getAPISignSecret{
     return [NSString stringWithFormat:@"%@&%@",oauth_consumer_secret, access_token_secret];
+}
+
+
++(NSArray *)json2TweetArray:(NSString *)jsonString{
+    NSError *error = nil;
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (jsonObject == nil || error != nil){
+        NSLog(@"%@ failed.", NSStringFromSelector(_cmd));
+        return nil;
+    }
+    if ([jsonObject isKindOfClass:[NSArray class]]){
+        NSArray *array = (NSArray*)jsonObject;
+        //        NSLog(@"tweetArray:%lu, %@", (unsigned long)[array count], array);
+        
+        NSArray *tweetsArray = [NSArray arrayWithArray:array];
+        return tweetsArray;
+    }
+    
+    return nil;
+}
+
+
+#pragma Common SDK functions
++ (void)postNewTweet:(NSString *)text
+               image:(UIImage *)image
+             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
+    static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
+    
+    NSString *apiUrl = @"";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    if (text.length != 0){
+        [parameters setObject:text forKey:@"status"];
+        apiUrl = txtApi;
+    }
+    if (image != nil){
+        apiUrl = photoApi;
+    }
+    NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    //    [parameters setObject:signautre forKey:@"oauth_signature"];
+    [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
+    
+    NSString *paraQueryString = [NetworkUtil dic2QueryString:parameters];
+    apiUrl = [apiUrl stringByAppendingFormat:@"?%@", paraQueryString];
+    
+    NSLog(@"apiUrl:%@", apiUrl);
+    AFHTTPRequestOperation *operation = [manager POST:apiUrl parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        if (image != nil){
+            NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+            [formData appendPartWithFileData:imageData name:@"photo" fileName:@"tst.jpg" mimeType:@"image/jpeg"];
+        }
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+        success(operation, responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@ failure.code:%ld, %@, %@", NSStringFromSelector(_cmd), (long)operation.response.statusCode, operation.responseString, error);
+        failure(operation, error);
+    }];
+    
+    [operation start];
+
+}
+
++ (void)getFavoriteTweetList:(NSString *)userId
+                       count:(NSInteger)count
+                        page:(NSInteger)page
+                     success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure{
+    
+//    static NSString *favoritesListAPI = @"http://rest.fanfou.com/favourites/user_timeline/%@/";
+    static NSString *favoritesListAPI = @"http://api.fanfou.com/favorites/%@.json";
+    
+    NSString *callAPI = [NSString stringWithFormat:favoritesListAPI, userId];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    if (0 < count && count <= 60){
+        [parameters setObject:[NSNumber numberWithInteger:count] forKey:@"count"];
+    }
+    if (page > 0){
+        [parameters setObject:[NSNumber numberWithInteger:page] forKey:@"page"];
+    }
+    
+    NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signautre forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
+    [operation start];
+}
+
++ (void)getFollowRequest:(NSString *)userId
+                    page:(NSInteger)page
+                   count:(NSInteger)count
+                 success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                 failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure{
+    static NSString *callAPI = @"http://api.fanfou.com/friendships/requests.json";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    
+    NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signautre forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
+    [operation start];
+
 }
 
 @end

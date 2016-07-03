@@ -13,6 +13,8 @@
 #import "NetworkUtil.h"
 #import "GlobalVar.h"
 #import "ProfileEditViewController.h"
+#import "FavoritedViewController.h"
+#import "FollowRequestController.h"
 #import <UIImageView+WebCache.h>
 
 @interface ProfileViewController ()
@@ -131,8 +133,8 @@ static NSString* cellId = @"cellId";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRow");
-    if (indexPath.section == 0){
+    NSLog(@"didSelectRow:%ld,%ld", (long)indexPath.section, (long)indexPath.row);
+    if (indexPath.section == 0){/* 个人信息编辑 */
         dispatch_async(dispatch_get_main_queue(), ^{
             ProfileEditViewController *editView = [[ProfileEditViewController alloc] init];
             editView.username = self.profileDic[@"id"];
@@ -141,8 +143,36 @@ static NSString* cellId = @"cellId";
             editView.homeurl = self.profileDic[@"url"];
             editView.location = self.profileDic[@"location"];
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:editView];
-            [self presentViewController:nav animated:TRUE completion:nil];
+            [self presentViewController:nav animated:YES completion:nil];
         });
+    }else if (indexPath.section == 1){ /* 黑名单 */
+        
+        switch (indexPath.row) {
+            case 0:
+            {
+            }
+                break;
+            case 1: /* 收藏消息 */
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    FavoritedViewController *favoriteView = [[FavoritedViewController alloc] init];
+                    favoriteView.userId = userId;
+                    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:favoriteView];
+                    [self presentViewController:nav animated:YES completion:nil];
+                });
+            }
+                break;
+            case 2: /* 关注请求 */
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    FollowRequestController *followRequestVC = [[FollowRequestController alloc] init];
+                    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:followRequestVC];
+                    [self presentViewController:nav animated:YES completion:nil];
+                });
+            }
+            default:
+                break;
+        }
     }
 }
 

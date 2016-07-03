@@ -20,8 +20,6 @@
 @property (nonatomic) NSUInteger textHeight;
 @end
 
-static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
-static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
 //static NSString *postApi = @"http://rest.fanfou.com/statuses/";
 
 @implementation NewTweetViewController
@@ -138,6 +136,9 @@ static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
 }
 
 -(void)postTweet:(id)sender{
+    static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
+    static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
+    
     if (self.tweetTxtView.text.length == 0 & self.image == nil){
         return;
     }
@@ -147,10 +148,14 @@ static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    NSDictionary *para2 = [[NSDictionary alloc] initWithDictionary:parameters];
     if (self.tweetTxtView.text.length != 0){
-        [parameters setObject:self.tweetTxtView.text forKey:@"status"];
+        NSString *haha = @"hello.中文";//\u4E2D\u6587
+        NSString *encodeTxt = [self.tweetTxtView.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [parameters setObject:encodeTxt forKey:@"status"];
         apiUrl = txtApi;
     }
+    
     if (self.image != nil && self.imageUrl != nil && self.imageUrl.length != 0){
         NSLog(@"imageUrl:%@", self.imageUrl);
         apiUrl = photoApi;
@@ -158,6 +163,9 @@ static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
     NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
 //    [parameters setObject:signautre forKey:@"oauth_signature"];
     [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
+    
+//    NSString *signautre2= [NetworkUtil postOauthSignature:apiUrl parameters:para2 secretKey:[NetworkUtil getAPISignSecret]];
+//    [parameters setObject:signautre2 forKey:@"oauth_signature"];
     
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     NSString *paraQueryString = [NetworkUtil dic2QueryString:parameters];
