@@ -144,6 +144,22 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     return nil;
 }
 
++ (NSArray *)parseJsonToArray:(NSString *)jsonString{
+    if (jsonString == nil)
+        return nil;
+    
+    NSError *error = nil;
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (jsonObject == nil || error != nil){
+        NSLog(@"%@ failed.", NSStringFromSelector(_cmd));
+        return nil;
+    }
+    if ([jsonObject isKindOfClass:[NSArray class]]){
+        return (NSArray *)jsonObject;
+    }
+    return nil;
+}
 
 #pragma Common SDK functions
 + (void)postNewTweet:(NSString *)text
@@ -240,6 +256,44 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
     [operation start];
 
+}
+
++ (void)getMessageConversationList:(NSInteger)page
+                             count:(NSInteger)count
+                           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                           failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure{
+    static NSString *callAPI = @"http://api.fanfou.com/direct_messages/conversation_list.json";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    
+    NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signautre forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
+    [operation start];
+}
+
++ (void)getMessageConversation:(NSString *)userId
+                          page:(NSInteger)page
+                         count:(NSInteger)count
+                       success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                       failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure{
+    static NSString *callAPI = @"http://api.fanfou.com/direct_messages/conversation.json";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    [parameters setObject:userId forKey:@"id"];
+    
+    NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signautre forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
+    [operation start];
 }
 
 @end

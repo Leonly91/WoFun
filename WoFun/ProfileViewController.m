@@ -203,7 +203,9 @@ static NSString* cellId = @"cellId";
         
         NSString *imageUrl = self.profileDic[@"profile_image_url_large"];
 //        UIImage *avatar = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]];
-        [avatarCell.avatar sd_setImageWithURL:[NSURL URLWithString:imageUrl]];
+        [avatarCell.avatar sd_setImageWithURL:[NSURL URLWithString:imageUrl] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [avatarCell setNeedsLayout];
+        }];
         avatarCell.avatar.layer.cornerRadius = avatarCell.avatar.frame.size.width /2;
         avatarCell.avatar.layer.borderWidth = 3.0f;
         avatarCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;

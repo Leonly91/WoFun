@@ -24,6 +24,7 @@
 + (NSString *)getAPISignSecret;
 
 + (NSArray *)json2TweetArray:(NSString *)jsonString;
++ (NSArray *)parseJsonToArray:(NSString *)jsonString;
 
 + (void)postNewTweet:(NSString *)text
                image:(UIImage *)image
@@ -41,6 +42,17 @@
                    count:(NSInteger)count
                  success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                  failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure;
+
++ (void)getMessageConversationList:(NSInteger)page
+                             count:(NSInteger)count
+                           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                           failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure;
+
++ (void)getMessageConversation:(NSString *)userId
+                          page:(NSInteger)page
+                         count:(NSInteger)count
+                       success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                       failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure;
 
 @end
 

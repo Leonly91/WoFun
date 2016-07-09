@@ -44,6 +44,8 @@ static NSString *user_id_str = @"user_id";
     
     if (userId.length){
         userId = [NSString stringWithFormat:@"%@", user_id];
+    }else{
+        userId = @"~fMZr07KX0Ds";
     }
     
     NSLog(@"readConfig. access_token = %@, access_secret = %@, userId = %@", access_token, access_token_secret, userId);
