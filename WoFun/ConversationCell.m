@@ -26,6 +26,8 @@
     CGRect mainScreen = [UIScreen mainScreen].bounds;
     CGRect imageRect = self.imageView.frame;
     self.imageView.frame = CGRectMake(mainScreen.size.width - imageRect.size.width - 10, 0, imageRect.size.width, imageRect.size.height);
+    CGRect detailLabelRect = self.detailTextLabel.frame;
+    self.detailTextLabel.frame = CGRectMake(detailLabelRect.origin.x, detailLabelRect.origin.y, detailLabelRect.size.width - imageRect.size.width, detailLabelRect.size.height);
 }
 
 @end
