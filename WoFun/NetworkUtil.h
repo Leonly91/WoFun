@@ -54,6 +54,40 @@
                        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                        failure:(void (^)(AFHTTPRequestOperation *operation, id responseObject))failure;
 
+/**
+ *  获取我关注的人的列表
+ *
+ *  @param userId  <#userId description#>
+ *  @param success <#success description#>
+ *  @param failure <#failure description#>
+ */
++ (void)getFriendList:(NSString *)userId
+             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+             failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
+
+
+/**
+ *  获取关注我的人的ID列表
+ *
+ *  @param userId  <#userId description#>
+ *  @param success <#success description#>
+ *  @param failure <#failure description#>
+ */
++ (void)getFollowerList:(NSString *)userId
+                success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
+
+/**
+ *  根据userId获取用户信息
+ *
+ *  @param userId  <#userId description#>
+ *  @param success <#success description#>
+ *  @param failure <#failure description#>
+ */
++ (void)getUserInfo:(NSString *)userId
+              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+              failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
+
 @end
 
 #endif

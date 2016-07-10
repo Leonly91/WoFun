@@ -29,6 +29,8 @@ static NSString *receiverCellId = @"receiverCellId";
     self.conversationArray = [[NSMutableArray alloc] init];
     self.heightInfo = [[NSMutableDictionary alloc] init];
     
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     self.prototypeCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:receiverCellId];
@@ -167,7 +169,13 @@ static NSString *receiverCellId = @"receiverCellId";
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    cell.detailTextLabel.backgroundColor = [UIColor greenColor];
+    //背景界面
+    cell.detailTextLabel.backgroundColor = [UIColor lightGrayColor];
+    cell.detailTextLabel.clipsToBounds = YES;
+    cell.detailTextLabel.layer.cornerRadius = 8.0;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 }
 
 /*

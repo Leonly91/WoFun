@@ -10,6 +10,7 @@
 #import "NetworkUtil.h"
 #import "GlobalVar.h"
 #import "ConversationViewController.h"
+#import "SearchFriendTable.h"
 #import <AFHTTPRequestOperation.h>
 #import <UIImageView+WebCache.h>
 
@@ -28,7 +29,9 @@
     
     [self getMessageArray];
     self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -37,8 +40,16 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    UIBarButtonItem *newConv = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newConv:)];
+    self.tabBarController.navigationItem.rightBarButtonItem = newConv;
     self.tabBarController.navigationItem.title = @"私信";
     [self.tableView reloadData];
+}
+
+-(IBAction)newConv:(id)sender{
+    SearchFriendTable *sft = [[SearchFriendTable alloc] init];
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:sft];
+    [self presentViewController:nvc animated:YES completion:nil];
 }
 
 -(void)getMessageArray{
