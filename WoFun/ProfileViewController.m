@@ -15,6 +15,7 @@
 #import "ProfileEditViewController.h"
 #import "FavoritedViewController.h"
 #import "FollowRequestController.h"
+#import "BlockListViewController.h"
 #import <UIImageView+WebCache.h>
 
 @interface ProfileViewController ()
@@ -148,8 +149,13 @@ static NSString* cellId = @"cellId";
     }else if (indexPath.section == 1){ /* 黑名单 */
         
         switch (indexPath.row) {
-            case 0:
+            case 0:/* 黑名单 */
             {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    BlockListViewController *blockView = [[BlockListViewController alloc] init];
+                    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:blockView];
+                    [self presentViewController:nav animated:YES completion:nil];
+                });
             }
                 break;
             case 1: /* 收藏消息 */

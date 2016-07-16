@@ -357,4 +357,23 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     [operation start];
 }
 
++ (void)getBlockList:(NSString *)userId
+                page:(NSUInteger)page
+               count:(NSUInteger)count
+             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+             failure:(void (^)(AFHTTPRequestOperation *, id))failure{
+    static NSString *callAPI = @"http://api.fanfou.com/blocks/blocking.json";
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    
+    NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signautre forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperation *operation = [manager GET:callAPI parameters:parameters success:success failure:failure];
+    [operation start];
+
+}
+
 @end

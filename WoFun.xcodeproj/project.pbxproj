@@ -18,6 +18,7 @@
 		4916D7C01CDEF606008AE3BE /* TweetPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916D7BF1CDEF606008AE3BE /* TweetPageViewController.m */; };
 		4916D7C21CE23656008AE3BE /* delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4916D7C11CE23656008AE3BE /* delete-button.png */; };
 		492E74851CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m in Sources */ = {isa = PBXBuildFile; fileRef = 492E74841CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m */; };
+		4936DB571D3A687100CBBD03 /* BlockListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4936DB561D3A687100CBBD03 /* BlockListViewController.m */; };
 		4968F99F1CC2137E004A6CCC /* ProfileEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */; };
 		49B30E321D212B7C000F766C /* FavoritedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B30E311D212B7C000F766C /* FavoritedViewController.m */; };
 		49B30E351D28BC4D000F766C /* FollowRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B30E341D28BC4D000F766C /* FollowRequestController.m */; };
@@ -74,6 +75,8 @@
 		4916D7C11CE23656008AE3BE /* delete-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete-button.png"; sourceTree = "<group>"; };
 		492E74831CE8791E0046DA3C /* AFURLConnectionOperation+Recover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AFURLConnectionOperation+Recover.h"; sourceTree = "<group>"; };
 		492E74841CE8792D0046DA3C /* AFURLConnectionOperation+Recover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFURLConnectionOperation+Recover.m"; sourceTree = "<group>"; };
+		4936DB551D3A687100CBBD03 /* BlockListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockListViewController.h; sourceTree = "<group>"; };
+		4936DB561D3A687100CBBD03 /* BlockListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockListViewController.m; sourceTree = "<group>"; };
 		4968F99D1CC2137E004A6CCC /* ProfileEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileEditViewController.h; sourceTree = "<group>"; };
 		4968F99E1CC2137E004A6CCC /* ProfileEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileEditViewController.m; sourceTree = "<group>"; };
 		49B30E301D212B7C000F766C /* FavoritedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritedViewController.h; sourceTree = "<group>"; };
@@ -185,6 +188,8 @@
 				49B30E401D313DB2000F766C /* SearchFriendTable.m */,
 				49B30E301D212B7C000F766C /* FavoritedViewController.h */,
 				49B30E311D212B7C000F766C /* FavoritedViewController.m */,
+				4936DB551D3A687100CBBD03 /* BlockListViewController.h */,
+				4936DB561D3A687100CBBD03 /* BlockListViewController.m */,
 				49B30E331D28BC4D000F766C /* FollowRequestController.h */,
 				49B30E341D28BC4D000F766C /* FollowRequestController.m */,
 				49F87B511C95034E001F8006 /* MessageViewController.h */,
@@ -451,6 +456,7 @@
 				49F87B621CAF649C001F8006 /* NetworkUtil.m in Sources */,
 				49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */,
 				4916D7C01CDEF606008AE3BE /* TweetPageViewController.m in Sources */,
+				4936DB571D3A687100CBBD03 /* BlockListViewController.m in Sources */,
 				49F87B561C950FED001F8006 /* ProfileViewController.m in Sources */,
 				49B30E381D28F460000F766C /* ConversationViewController.m in Sources */,
 				490DD9AB1CCCCFB600000881 /* FunTweet.m in Sources */,

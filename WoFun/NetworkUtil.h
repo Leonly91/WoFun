@@ -88,6 +88,19 @@
               success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
               failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
 
+/**
+ *  根据userId获取黑名单用户信息列表
+ *
+ *  @param userId  <#userId description#>
+ *  @param success <#success description#>
+ *  @param failure <#failure description#>
+ */
++ (void)getBlockList:(NSString *)userId
+                page:(NSUInteger)page
+               count:(NSUInteger)count
+            success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+            failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
+
 @end
 
 #endif
