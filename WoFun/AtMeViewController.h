@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AtMeViewController : UIViewController
+@interface AtMeViewController : UITableViewController
 
 @end

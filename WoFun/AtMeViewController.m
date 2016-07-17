@@ -7,26 +7,167 @@
 //
 
 #import "AtMeViewController.h"
+#import "GlobalVar.h"
+#import "NetworkUtil.h"
+#import "FunTweet.h"
+#import "UILargeImgViewController.h"
+#import "TweetViewCell.h"
+#import <AFHTTPRequestOperation.h>
+#import <UIImageView+WebCache.h>
 
 @interface AtMeViewController ()
+@property (nonatomic) NSMutableArray *messageArray;
+@property (nonatomic) NSMutableDictionary *tweetsDic;
+@property (nonatomic) UITableViewCell *prototypeCell;
 
+@property (nonatomic) UIView *bgView;
 @end
+
+static NSString *tweetCellId = @"TweetViewCell";
 
 @implementation AtMeViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tabBarController.navigationItem.title = @"提到我";
+    
+    [self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    self.tabBarController.navigationItem.title = @"@ Me";
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self loadMentionMessages];
+}
+
+-(void)loadMentionMessages{
+    [NetworkUtil getMentions:0 maxId:0 page:0 count:0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"%@-%@ success.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
+        
+        [self addObjects2DataSource:[NetworkUtil json2TweetArray:operation.responseString]];
+        
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
+    } failure:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@-%@ failure.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
+    }];
+}
+
+-(void)addObjects2DataSource:(NSArray *)objects{
+    if (!objects){
+        return;
+    }
+    for (NSObject *obj in objects){
+        FunTweet *tweet = [[FunTweet alloc] initWithJson: (NSDictionary *)obj];
+        if (self.tweetsDic[tweet.rawId] == nil){
+            self.tweetsDic[tweet.rawId] = obj;
+            [self.messageArray addObject:obj];
+        }
+    }
+}
+
+-(NSMutableArray *)messageArray{
+    if (_messageArray == nil){
+        _messageArray = [[NSMutableArray alloc] init];
+    }
+    return _messageArray;
+}
+
+-(NSMutableDictionary*)tweetsDic{
+    if (_tweetsDic == nil){
+        _tweetsDic = [[NSMutableDictionary alloc] init];
+    }
+    return _tweetsDic;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.messageArray.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    TweetViewCell *tableCell = (TweetViewCell *)[tableView dequeueReusableCellWithIdentifier:tweetCellId];
+    if (tableCell == nil){
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
+        tableCell = [nib objectAtIndex:0];
+    }
+    
+    self.prototypeCell = tableCell;
+    
+    FunTweet *tweet = [[FunTweet alloc] initWithJson: self.messageArray[indexPath.row]];
+    if (tweet != nil){
+        tableCell.username.text = tweet.username;
+        tableCell.tweetContent.text = tweet.content;
+        [tableCell.tweetContent sizeToFit];
+        [tableCell.avatar sd_setImageWithURL:[NSURL URLWithString:tweet.avatar] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [tableCell setNeedsLayout];
+        }];
+        tableCell.avatar.layer.cornerRadius = 6.0f;
+        tableCell.avatar.layer.borderWidth = 1.0f;
+        tableCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;
+        tableCell.avatar.clipsToBounds = YES;
+        tableCell.createTime.text = tweet.createTimeLabel;
+        tableCell.photoHeight.constant = (tweet.photoUrl == nil)  %2 ? 0 : 110;
+        if (tweet.photoUrl != nil){
+            [tableCell.photoImage sd_setImageWithURL:[NSURL URLWithString:tweet.photoUrl]];
+            tableCell.photoImage.layer.cornerRadius = 4.0f;
+            tableCell.photoImage.clipsToBounds = YES;
+            tableCell.photoImage.contentMode = UIViewContentModeCenter;
+            tableCell.photoImage.userInteractionEnabled = YES;
+            tableCell.photoImage.tag = indexPath.row;
+            
+            UITapGestureRecognizer *tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(
+                                                                                                                  tapPhoto:)];
+            [tableCell.photoImage addGestureRecognizer:tapRec];
+        }
+    }
+    
+    tableCell.tweetContent.scrollEnabled = false;
+    
+    return tableCell;
+}
+
+/**
+ * 显示图片原图，支持手指缩放
+ */
+-(IBAction)tapPhoto:(id)sender{
+    //    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    CGRect mainRect = [UIScreen mainScreen].bounds;
+    CGPoint location = [sender locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+    
+    UITapGestureRecognizer *tapReg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeBgView:
+                                                                                                          )];
+    [self.bgView addGestureRecognizer:tapReg];
+    
+    TweetViewCell *cell = (TweetViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
+    //    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    //    [window addSubview:self.bgView];
+    UILargeImgViewController *largeImgv = [[UILargeImgViewController alloc] init];
+    largeImgv.image = cell.photoImage.image;
+    //    [window.rootViewController presentViewController:largeImgv animated:YES completion:nil];
+    [self.navigationController presentViewController:largeImgv animated:YES completion:nil];
+}
+
+-(IBAction)closeBgView:(id)sender{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    if (self.bgView != nil){
+        [self.bgView removeFromSuperview];
+        [self.bgView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    }
+    self.tableView.scrollEnabled = TRUE;
 }
 
 /*

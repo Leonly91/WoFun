@@ -44,6 +44,10 @@
         NSArray *array = [NetworkUtil parseJsonToArray:operation.responseString];
         [self.blockUserArray addObjectsFromArray:array];
         
+        [self.tableView reloadData];
+        
+        self.navigationItem.title = [NSString stringWithFormat:@"黑名单(%lu)", (unsigned long)self.blockUserArray.count];
+        
     } failure:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@-%@ failure.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
     }];

@@ -101,6 +101,22 @@
             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
             failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
 
+/**
+ *  获取@我的消息列表
+ *
+ *  @param userId  <#userId description#>
+ *  @param page    <#page description#>
+ *  @param count   <#count description#>
+ *  @param success <#success description#>
+ *  @param failure <#failure description#>
+ */
++ (void)getMentions:(NSInteger)sinceId
+               maxId:(NSInteger)maxId
+                page:(NSInteger)page
+               count:(NSInteger)count
+             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+             failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
+
 @end
 
 #endif
