@@ -21,8 +21,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.requestArray  = [[NSMutableArray alloc] init];
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -30,6 +28,13 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     [self getFollowRequest];
+}
+
+-(NSMutableArray *)requestArray{
+    if (_requestArray == nil){
+        _requestArray = [[NSMutableArray alloc] init];
+    }
+    return _requestArray;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -44,6 +49,14 @@
 - (void)getFollowRequest{
     [NetworkUtil getFollowRequest:nil page:0 count:0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@-%@ success. %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
+        
+        NSArray *array = [NetworkUtil parseJsonToArray:operation.responseString];
+        [self.requestArray removeAllObjects];
+        [self.requestArray addObjectsFromArray:array];
+        
+        [self.tableView reloadData];
+        
+        self.navigationItem.title = [NSString stringWithFormat:@"关注请求(%lu)", self.requestArray.count];
         
     } failure:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@-%@ failure. %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
@@ -72,12 +85,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellId = @"cellId";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     if (cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
     }
     
     // Configure the cell...
+    cell.textLabel.text = self.requestArray[indexPath.row];
     
     return cell;
 }

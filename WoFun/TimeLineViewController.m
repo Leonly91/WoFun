@@ -43,6 +43,10 @@ static NSString *tweetCellId = @"TweetViewCell";
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self setRefreshControl:refreshControl];
+    UIEdgeInsets adjustForTabBar = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+    self.tableView.contentInset = adjustForTabBar;
+    self.tableView.scrollIndicatorInsets = adjustForTabBar;
+//    self.tableView.pagingEnabled = YES;
     
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     [self getTimeline];
@@ -85,7 +89,7 @@ static NSString *tweetCellId = @"TweetViewCell";
 #pragma table view
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.tweetsArray.count;
+    return self.tweetsArray.count + 1;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -133,58 +137,102 @@ static NSString *tweetCellId = @"TweetViewCell";
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TweetViewCell *tableCell = (TweetViewCell *)[tableView dequeueReusableCellWithIdentifier:tweetCellId];
-    if (tableCell == nil){
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
-        tableCell = [nib objectAtIndex:0];
-    }
-//    if (self.prototypeCell == nil){
-        self.prototypeCell = tableCell;
-//    }
-
-    FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
-    if (tweet != nil){
-        tableCell.username.text = tweet.username;
-        tableCell.tweetContent.text = tweet.content;
-        [tableCell.tweetContent sizeToFit];
-        [tableCell.avatar sd_setImageWithURL:[NSURL URLWithString:tweet.avatar]];
-        tableCell.avatar.layer.cornerRadius = 6.0f;
-        tableCell.avatar.layer.borderWidth = 1.0f;
-        tableCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;
-        tableCell.avatar.clipsToBounds = YES;
-        tableCell.createTime.text = tweet.createTimeLabel;
-        tableCell.photoHeight.constant = (tweet.photoUrl == nil)  %2 ? 0 : 110;
-        if (tweet.photoUrl != nil){
-            [tableCell.photoImage sd_setImageWithURL:[NSURL URLWithString:tweet.photoUrl]];
-            tableCell.photoImage.layer.cornerRadius = 4.0f;
-            tableCell.photoImage.clipsToBounds = YES;
-            tableCell.photoImage.contentMode = UIViewContentModeCenter;
-            tableCell.photoImage.userInteractionEnabled = YES;
-            tableCell.photoImage.tag = indexPath.row;
-            
-            UITapGestureRecognizer *tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(
-            tapPhoto:)];
-            [tableCell.photoImage addGestureRecognizer:tapRec];
+    static NSString *loadMoreCellId = @"loadMoreCellId";
+    if (indexPath.row == self.tweetsArray.count){
+        UITableViewCell *tableCell = [tableView dequeueReusableCellWithIdentifier:loadMoreCellId];
+        if (tableCell == nil){
+            tableCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:loadMoreCellId];
+            tableCell.textLabel.text = @"加载更多... ";
+            tableCell.textLabel.textAlignment = NSTextAlignmentCenter;
         }
+        return tableCell;
+    }else{
+        TweetViewCell *tableCell = nil;
+        tableCell = (TweetViewCell *)[tableView dequeueReusableCellWithIdentifier:tweetCellId];
+        if (tableCell == nil){
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:tweetCellId owner:self options:nil];
+            tableCell = [nib objectAtIndex:0];
+        }
+    //    if (self.prototypeCell == nil){
+            self.prototypeCell = tableCell;
+    //    }
+
+        FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
+        if (tweet != nil){
+            tableCell.username.text = tweet.username;
+            tableCell.tweetContent.text = tweet.content;
+            [tableCell.tweetContent sizeToFit];
+            [tableCell.avatar sd_setImageWithURL:[NSURL URLWithString:tweet.avatar]];
+            tableCell.avatar.layer.cornerRadius = 6.0f;
+            tableCell.avatar.layer.borderWidth = 1.0f;
+            tableCell.avatar.layer.borderColor = [UIColor whiteColor].CGColor;
+            tableCell.avatar.clipsToBounds = YES;
+            tableCell.createTime.text = tweet.createTimeLabel;
+            tableCell.photoHeight.constant = (tweet.photoUrl == nil)  %2 ? 0 : 110;
+            if (tweet.photoUrl != nil){
+                [tableCell.photoImage sd_setImageWithURL:[NSURL URLWithString:tweet.photoUrl]];
+                tableCell.photoImage.layer.cornerRadius = 4.0f;
+                tableCell.photoImage.clipsToBounds = YES;
+                tableCell.photoImage.contentMode = UIViewContentModeCenter;
+                tableCell.photoImage.userInteractionEnabled = YES;
+                tableCell.photoImage.tag = indexPath.row;
+                
+                UITapGestureRecognizer *tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(
+                tapPhoto:)];
+                [tableCell.photoImage addGestureRecognizer:tapRec];
+            }
+        }
+        
+        tableCell.tweetContent.scrollEnabled = false;
+        return tableCell;
     }
     
-    tableCell.tweetContent.scrollEnabled = false;
-    
-    return tableCell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"%@, %lu", NSStringFromSelector(_cmd), indexPath.row);
     
-    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithTitle:@"Homeline" style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = backItem;
-    TweetPageViewController *tweetPage = [[TweetPageViewController alloc] initWithStyle:UITableViewStylePlain];
-    FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
-    if (tweet != nil){
-        tweetPage.funTweet = tweet;
-        [self.navigationController pushViewController:tweetPage animated:YES];
+    if (indexPath.row < self.tweetsArray.count){
+        UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithTitle:@"Homeline" style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.navigationItem.backBarButtonItem = backItem;
+        TweetPageViewController *tweetPage = [[TweetPageViewController alloc] initWithStyle:UITableViewStylePlain];
+        FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[indexPath.row]];
+        if (tweet != nil){
+            tweetPage.funTweet = tweet;
+            [self.navigationController pushViewController:tweetPage animated:YES];
+        }else{
+            NSLog(@"%@:%@ fail.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+        }
     }else{
-        NSLog(@"%@:%@ fail.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+        /* load more items */
+        FunTweet *tweet = [[FunTweet alloc] initWithJson: self.tweetsArray[self.tweetsArray.count - 1]];
+        NSNumberFormatter *format = [[NSNumberFormatter alloc] init];
+        format.numberStyle = NSNumberFormatterDecimalStyle;
+//        NSNumber *maxId = [format numberFromString:tweet.rawId];
+//        NSNumber *maxId = [NSNumber numberWithInteger:[tweet.rawId integerValue]];
+        NSString *maxId = tweet.id;
+        [NetworkUtil getTimeline:0 since_id:0 max_id:maxId  count:[NSNumber numberWithInt:30] page:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//            NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+            
+            int preCount = (int)self.tweetsArray.count;
+            
+            NSArray *array = [NetworkUtil json2TweetArray:operation.responseString];
+            [self addObjects2DataSource:array];
+            
+            int currentCnt = (int)self.tweetsArray.count;
+            
+            NSLog(@"%@ success.%ld", NSStringFromSelector(_cmd), self.tweetsArray.count);
+            
+            //
+            NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+            for (int i = preCount; i < currentCnt; i++){
+                NSIndexPath *ipath = [NSIndexPath indexPathForRow:i inSection:0];
+                [indexPaths addObject:ipath];
+            }
+            [tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
+        }];
     }
 }
 
@@ -253,18 +301,11 @@ static NSString *tweetCellId = @"TweetViewCell";
     }
     NSLog(@"%@ executes.access_token:%@, access_token_secret:%@", NSStringFromSelector(_cmd), access_token, access_token_secret);
     
-    NSString *apiUrl = @"http://api.fanfou.com/statuses/home_timeline.json";
-    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
-    NSString *signature = [NetworkUtil getOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
-    [parameters setObject:signature forKey:@"oauth_signature"];
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager GET:apiUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
-        
+    [NetworkUtil getTimeline:nil since_id:nil max_id:nil count:[NSNumber numberWithInt:30] page:[NSNumber numberWithInt:1] success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+
         [self addObjects2DataSource:[NetworkUtil json2TweetArray:operation.responseString]];
-        
+
         [self.refreshControl endRefreshing];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
