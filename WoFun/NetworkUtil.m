@@ -162,6 +162,37 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
 }
 
 #pragma Common SDK functions
++ (void)getTimeline:(NSString *)userId
+           since_id:(NSString *)since_id
+             max_id:(NSString *)max_id
+              count:(NSNumber *)count
+               page:(NSNumber *)page_id
+            success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure{
+    NSString *apiUrl = @"http://api.fanfou.com/statuses/home_timeline.json";
+    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    if (count){
+        [parameters setObject:count forKey:@"count"];
+    }
+    if (page_id){
+        [parameters setObject:page_id forKey:@"page"];
+    }
+    if (since_id){
+        [parameters setObject:since_id forKey:@"since_id"];
+    }
+    if (max_id){
+        [parameters setObject:max_id forKey:@"max_id"];
+    }
+    
+    NSString *signature = [NetworkUtil getOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:signature forKey:@"oauth_signature"];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager GET:apiUrl parameters:parameters success:success failure:failure];
+    [operation start];
+}
+
 + (void)postNewTweet:(NSString *)text
                image:(UIImage *)image
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
@@ -376,10 +407,10 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
 
 }
 
-+ (void)getMentions:(NSInteger)sinceId
-              maxId:(NSInteger)maxId
-               page:(NSInteger)page
-              count:(NSInteger)count
++ (void)getMentions:(NSString *)sinceId
+              maxId:(NSString *)maxId
+               page:(NSNumber *)page
+              count:(NSNumber *)count
             success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
             failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure{
     static NSString *callAPI = @"http://api.fanfou.com/statuses/mentions.json";
@@ -387,11 +418,17 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
-    if (sinceId > 0){
-        [parameters setObject:[NSNumber numberWithInteger:sinceId] forKey:@"since_id"];
+    if (sinceId){
+        [parameters setObject:sinceId forKey:@"since_id"];
     }
-    if (maxId >0){
-        [parameters setObject:[NSNumber numberWithInteger:maxId] forKey:@"max_id"];
+    if (maxId){
+        [parameters setObject:maxId forKey:@"max_id"];
+    }
+    if (page){
+        [parameters setObject:page forKey:@"page"];
+    }
+    if (count){
+        [parameters setObject:count forKey:@"count"];
     }
     
     NSString *signautre = [NetworkUtil getOauthSignature:callAPI parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];

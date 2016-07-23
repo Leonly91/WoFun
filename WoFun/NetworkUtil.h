@@ -26,6 +26,14 @@
 + (NSArray *)json2TweetArray:(NSString *)jsonString;
 + (NSArray *)parseJsonToArray:(NSString *)jsonString;
 
++ (void)getTimeline:(NSString *)userId
+           since_id:(NSString *)since_id
+             max_id:(NSString *)max_id
+              count:(NSNumber *)count
+               page:(NSNumber *)page_id
+            success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
+
 + (void)postNewTweet:(NSString *)text
                image:(UIImage *)image
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
@@ -110,10 +118,10 @@
  *  @param success <#success description#>
  *  @param failure <#failure description#>
  */
-+ (void)getMentions:(NSInteger)sinceId
-               maxId:(NSInteger)maxId
-                page:(NSInteger)page
-               count:(NSInteger)count
++ (void)getMentions:(NSString *)sinceId
+               maxId:(NSString *)maxId
+                page:(NSNumber *)page
+               count:(NSNumber *)count
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
              failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
 

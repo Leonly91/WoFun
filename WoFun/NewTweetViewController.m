@@ -30,7 +30,7 @@
     self.tweetTxtView.text = @"hello.";
     self.textHeight = self.tweetTxtView.contentSize.height;
     
-    self.navigationItem.rightBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
+    self.navigationItem.rightBarButtonItem =[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"no.png"] style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
     ;
     self.navigationItem.title = @"发布推文";
     self.navigationController.navigationBar.translucent = NO;

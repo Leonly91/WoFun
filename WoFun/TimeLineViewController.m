@@ -18,6 +18,7 @@
 #import "UILargeImgViewController.h"
 #import "NewTweetViewController.h"
 #import "TweetPageViewController.h"
+#import <UIToast.h>
 
 @interface TimeLineViewController ()
 @property (nonatomic) NSMutableArray *tweetsArray;
@@ -43,11 +44,12 @@ static NSString *tweetCellId = @"TweetViewCell";
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     [self setRefreshControl:refreshControl];
-    UIEdgeInsets adjustForTabBar = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.height, 0);
+    UIEdgeInsets adjustForTabBar = UIEdgeInsetsMake(5, 0, self.tabBarController.tabBar.frame.size.height, 0);
     self.tableView.contentInset = adjustForTabBar;
     self.tableView.scrollIndicatorInsets = adjustForTabBar;
 //    self.tableView.pagingEnabled = YES;
-    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor colorWithRed:5 green:5 blue:5 alpha:0.8];
     //[self.tableView registerNib:[UINib nibWithNibName:tweetCellId bundle:nil] forCellReuseIdentifier:tweetCellId];
     [self getTimeline];
     
@@ -73,7 +75,8 @@ static NSString *tweetCellId = @"TweetViewCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     self.tabBarController.navigationItem.title = @"WoFun";
-    UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFun:)];
+    UIImage *addImage = [UIImage imageNamed:@"write.png"];
+    UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithImage:addImage style:UIBarButtonItemStylePlain target:self action:@selector(newFun:)];
     self.tabBarController.navigationItem.rightBarButtonItem = newFun;
     self.tabBarController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:nil];
     
@@ -145,6 +148,7 @@ static NSString *tweetCellId = @"TweetViewCell";
             tableCell.textLabel.text = @"加载更多... ";
             tableCell.textLabel.textAlignment = NSTextAlignmentCenter;
         }
+
         return tableCell;
     }else{
         TweetViewCell *tableCell = nil;
@@ -184,6 +188,7 @@ static NSString *tweetCellId = @"TweetViewCell";
         }
         
         tableCell.tweetContent.scrollEnabled = false;
+        
         return tableCell;
     }
     
@@ -214,22 +219,26 @@ static NSString *tweetCellId = @"TweetViewCell";
         [NetworkUtil getTimeline:0 since_id:0 max_id:maxId  count:[NSNumber numberWithInt:30] page:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //            NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
             
-            int preCount = (int)self.tweetsArray.count;
             
             NSArray *array = [NetworkUtil json2TweetArray:operation.responseString];
-            [self addObjects2DataSource:array];
-            
-            int currentCnt = (int)self.tweetsArray.count;
-            
-            NSLog(@"%@ success.%ld", NSStringFromSelector(_cmd), self.tweetsArray.count);
-            
-            //
-            NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-            for (int i = preCount; i < currentCnt; i++){
-                NSIndexPath *ipath = [NSIndexPath indexPathForRow:i inSection:0];
-                [indexPaths addObject:ipath];
+            if (array.count == 0){
+                NSString *text = @"没有更多了";
+                [[UIToast makeText:text] show];
+            }else{
+                int preCount = (int)self.tweetsArray.count;
+                [self addObjects2DataSource:array];
+                int currentCnt = (int)self.tweetsArray.count;
+                
+                NSLog(@"%@ success.%ld", NSStringFromSelector(_cmd), self.tweetsArray.count);
+                
+                //
+                NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+                for (int i = preCount; i < currentCnt; i++){
+                    NSIndexPath *ipath = [NSIndexPath indexPathForRow:i inSection:0];
+                    [indexPaths addObject:ipath];
+                }
+                [tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
             }
-            [tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
         }];
@@ -302,7 +311,7 @@ static NSString *tweetCellId = @"TweetViewCell";
     NSLog(@"%@ executes.access_token:%@, access_token_secret:%@", NSStringFromSelector(_cmd), access_token, access_token_secret);
     
     [NetworkUtil getTimeline:nil since_id:nil max_id:nil count:[NSNumber numberWithInt:30] page:[NSNumber numberWithInt:1] success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+//        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
 
         [self addObjects2DataSource:[NetworkUtil json2TweetArray:operation.responseString]];
 

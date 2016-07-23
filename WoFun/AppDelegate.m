@@ -29,21 +29,30 @@
     
     UITabBarController *tabBarController = [[UITabBarController alloc] init];
     TimeLineViewController *view1 = [[TimeLineViewController alloc] init];
-    view1.tabBarItem.title = @"TimeLine";
+//    view1.tabBarItem.title = @"TimeLine";
+    view1.tabBarItem.image = [UIImage imageNamed:@"infor.png"];
+    view1.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
     
     MessageViewController *view2 = [[MessageViewController alloc] init];
-    view2.tabBarItem.title = @"Message";
+//    view2.tabBarItem.title = @"Message";
+    view2.tabBarItem.image = [UIImage imageNamed:@"message.png"];
+    view2.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
     
     AtMeViewController *view3 = [[AtMeViewController alloc] init];
-    view3.tabBarItem.title = @"@Me";
+//    view3.tabBarItem.title = @"@Me";
+    view3.tabBarItem.image = [UIImage imageNamed:@"@.png"];
+    view3.tabBarItem.imageInsets = UIEdgeInsetsMake(10, 0, -10, 0);
     
     ProfileViewController *view4 = [[ProfileViewController alloc] init];
-    view4.tabBarItem.title = @"Profile";
+//    view4.tabBarItem.title = @"Profile";
+    view4.tabBarItem.image = [UIImage imageNamed:@"profile2.png"];
+    view4.tabBarItem.imageInsets = UIEdgeInsetsMake(6, 0, -6, 0);
     
     [tabBarController addChildViewController:view1];
     [tabBarController addChildViewController:view2];
     [tabBarController addChildViewController:view3];
     [tabBarController addChildViewController:view4];
+    
     
     tabBarController.navigationItem.title = @"WoFun";
     [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];

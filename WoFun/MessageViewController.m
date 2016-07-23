@@ -40,7 +40,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    UIBarButtonItem *newConv = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newConv:)];
+    UIBarButtonItem *newConv = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"conversation.png"] style:UIBarButtonItemStylePlain target:self action:@selector(newConv:)];
     self.tabBarController.navigationItem.rightBarButtonItem = newConv;
     self.tabBarController.navigationItem.title = @"私信";
     [self.tableView reloadData];
