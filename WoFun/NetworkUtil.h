@@ -125,6 +125,10 @@
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
              failure:(void (^)(AFHTTPRequestOperation *operation ,id responseObject))failure;
 
++(void)postTweet:(NSString *)postText
+           image:(UIImage *)image
+ completeHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completeHandler;
+
 @end
 
 #endif

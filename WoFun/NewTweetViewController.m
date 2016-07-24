@@ -135,6 +135,17 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)postTweet2:(id)sender{
+    NSString *txt = @"中文1";
+    [NetworkUtil postTweet:txt image:nil completeHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error){
+            NSLog(@"%@-%@ failure.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
+        }else{
+            NSLog(@"%@", response);
+        }
+    }];
+}
+
 -(void)postTweet:(id)sender{
     static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
     static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
@@ -152,7 +163,7 @@
     if (self.tweetTxtView.text.length != 0){
         NSString *haha = @"hello.中文";//\u4E2D\u6587
         NSString *encodeTxt = [self.tweetTxtView.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [parameters setObject:encodeTxt forKey:@"status"];
+        [parameters setObject:haha forKey:@"status"];
         apiUrl = txtApi;
     }
     

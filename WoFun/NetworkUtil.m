@@ -438,4 +438,45 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     [operation start];
 }
 
+/* 使用URLSession发帖 */
++(void)postTweet:(NSString *)postText
+           image:(UIImage *)image
+ completeHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completeHandler{
+    if (!postText || postText.length == 0){
+        return;
+    }
+    static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
+    static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
+    
+    NSString *apiURL = txtApi;
+    if (image){
+        apiURL = photoApi;
+    }
+    
+    NSMutableDictionary *parameters = [self getAPIParameters];
+    [parameters setObject:postText forKey:@"status"];
+    
+    NSString *signautre = [NetworkUtil postOauthSignature:apiURL parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
+    [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
+    
+    NSURLSessionConfiguration *defaultConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"wofun_background"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:apiURL]];
+    request.HTTPMethod = @"POST";
+    NSString *queryString = [self dic2QueryString:parameters];
+    NSData *postData=[queryString dataUsingEncoding:NSUTF8StringEncoding];
+    request.HTTPBody = postData;
+    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)postData.length];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+    if (image){
+        NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+    }
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfiguration];
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:completeHandler];
+
+    [task resume];
+}
+
 @end
