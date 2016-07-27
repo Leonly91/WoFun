@@ -454,23 +454,60 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     }
     
     NSMutableDictionary *parameters = [self getAPIParameters];
+    NSMutableDictionary *para_withoutstatus = [[NSMutableDictionary alloc] initWithDictionary:parameters];
     [parameters setObject:postText forKey:@"status"];
+    
+    NSString *sig = [NetworkUtil postOauthSignature:apiURL parameters:para_withoutstatus secretKey:[NetworkUtil getAPISignSecret]];
+    [para_withoutstatus setObject:[sig URLEncode] forKey:@"oauth_signature"];
     
     NSString *signautre = [NetworkUtil postOauthSignature:apiURL parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
     [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
     
-    NSURLSessionConfiguration *defaultConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"wofun_background"];
+    NSURLSessionConfiguration *defaultConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:apiURL]];
     request.HTTPMethod = @"POST";
-    NSString *queryString = [self dic2QueryString:parameters];
-    NSData *postData=[queryString dataUsingEncoding:NSUTF8StringEncoding];
-    request.HTTPBody = postData;
-    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)postData.length];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     
     if (image){
+        NSString *boundary = [NSString stringWithFormat:@"boundary+%@",[self getTimeStamp]];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+        
+        NSMutableData *body = [NSMutableData data];
+        for (NSString *key in parameters){
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"%@\r\n", parameters[key]] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
         NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+        if (imageData){
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"imageupload.jpg\"\r\n", @"photo"] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:imageData];
+            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        request.HTTPBody = body;
+        
+        NSString *postLength = [NSString stringWithFormat:@"%lu", [body length]];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        
+        NSString *queryString = [self dic2QueryString:para_withoutstatus];
+        NSString *urlString = [NSString stringWithFormat:@"%@?%@", apiURL, queryString];
+        request.URL = [NSURL URLWithString:urlString];
+        
+    }else{
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        NSString *queryString = [self dic2QueryString:parameters];
+        NSData *postData=[queryString dataUsingEncoding:NSUTF8StringEncoding];
+        request.HTTPBody = postData;
+        
+        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)postData.length];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     }
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:defaultConfiguration];
