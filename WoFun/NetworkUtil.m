@@ -193,6 +193,8 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     [operation start];
 }
 
+
+//使用AFN发推
 + (void)postNewTweet:(NSString *)text
                image:(UIImage *)image
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
@@ -208,6 +210,8 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     
     NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
+    NSMutableDictionary *para_withoutstatus = [[NSMutableDictionary alloc] initWithDictionary:parameters];
+    
     if (text.length != 0){
         [parameters setObject:text forKey:@"status"];
         apiUrl = txtApi;
@@ -216,13 +220,15 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
         apiUrl = photoApi;
     }
     NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
-    //    [parameters setObject:signautre forKey:@"oauth_signature"];
     [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
     
-    NSString *paraQueryString = [NetworkUtil dic2QueryString:parameters];
+    NSString *sig = [NetworkUtil postOauthSignature:apiUrl parameters:para_withoutstatus secretKey:[NetworkUtil getAPISignSecret]];
+    [para_withoutstatus setObject:[sig URLEncode] forKey:@"oauth_signature"];
+    
+    NSString *paraQueryString = [NetworkUtil dic2QueryString:para_withoutstatus];
     apiUrl = [apiUrl stringByAppendingFormat:@"?%@", paraQueryString];
     
-    NSLog(@"apiUrl:%@", apiUrl);
+//    NSLog(@"apiUrl:%@", apiUrl);
     AFHTTPRequestOperation *operation = [manager POST:apiUrl parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         if (image != nil){
             NSData *imageData = UIImageJPEGRepresentation(image, 0.5);

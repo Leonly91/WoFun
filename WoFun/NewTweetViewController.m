@@ -11,6 +11,7 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "GlobalVar.h"
 #import <NSString+URLEncode.h>
+#import <UIToast.h>
 
 @interface NewTweetViewController ()
 @property (nonatomic) UIImageView *imageView;
@@ -135,7 +136,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)postTweet2:(id)sender{
+-(void)postTweet1:(id)sender{
     if (self.tweetTxtView.text.length == 0 && self.image == nil){
         NSLog(@"%@-%@ tweetTxtView txt & image is empty!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
         return;
@@ -152,53 +153,18 @@
 }
 
 -(void)postTweet:(id)sender{
-    static NSString *txtApi = @"http://api.fanfou.com/statuses/update.json";
-    static NSString *photoApi = @"http://api.fanfou.com/photos/upload.json";
-    
-    if (self.tweetTxtView.text.length == 0 & self.image == nil){
-        return;
-    }
-    NSString *apiUrl = @"";
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    NSMutableDictionary *parameters = [NetworkUtil getAPIParameters];
-    NSMutableDictionary *para_withoutstatus = [[NSMutableDictionary alloc] initWithDictionary:parameters];
-    if (self.tweetTxtView.text.length != 0){
-        NSString *haha = @"hello.中文2";//\u4E2D\u6587
-//        NSString *encodeTxt = [self.tweetTxtView.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [parameters setObject:self.tweetTxtView.text forKey:@"status"];
-        apiUrl = txtApi;
+    if (self.tweetTxtView.text.length == 0 && self.image == nil && self.imageUrl.length == 0){
+        return ;
     }
     
-    if (self.image != nil && self.imageUrl != nil && self.imageUrl.length != 0){
-        NSLog(@"imageUrl:%@", self.imageUrl);
-        apiUrl = photoApi;
-    }
-    NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
-//    [parameters setObject:signautre forKey:@"oauth_signature"];
-    [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
-    NSString *sig = [NetworkUtil postOauthSignature:apiUrl parameters:para_withoutstatus secretKey:[NetworkUtil getAPISignSecret]];
-    [para_withoutstatus setObject:[sig URLEncode] forKey:@"oauth_signature"];
-    
-    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    NSString *paraQueryString = [NetworkUtil dic2QueryString:para_withoutstatus];
-    apiUrl = [apiUrl stringByAppendingFormat:@"?%@", paraQueryString];
-    
-    NSLog(@"apiUrl:%@", apiUrl);
-    AFHTTPRequestOperation *operation = [manager POST:apiUrl parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        if (self.image != nil){
-            NSData *imageData = UIImageJPEGRepresentation(self.image, 0.5);
-            [formData appendPartWithFileData:imageData name:@"photo" fileName:@"tst.jpg" mimeType:@"image/jpeg"];
-        }
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [NetworkUtil postNewTweet:self.tweetTxtView.text image:self.image success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+        
+        NSString *text = @"发送成功";
+        [[UIToast makeText:text] show];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@ failure.code:%ld, %@, %@", NSStringFromSelector(_cmd), (long)operation.response.statusCode, operation.responseString, error);
     }];
-    
-    [operation start];
     
     [self cancelAction];
 }

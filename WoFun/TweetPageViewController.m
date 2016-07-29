@@ -22,6 +22,8 @@
 @property (nonatomic) UITextView *tweetContentTv;
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIBarButtonItem *favoriteButtonItem;
+@property (nonatomic) UIImage *favImg;
+@property (nonatomic) UIImage *unFavImg;
 @end
 
 static NSString *favoriteCreateAPI = @"http://api.fanfou.com/favorites/create/";
@@ -143,22 +145,26 @@ static NSString *redirectMsgAPI = @"";
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tweetContentCellId];
 //            cell.backgroundColor = [UIColor greenColor];
             UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width - 20, cell.bounds.size.height)];
-            NSMutableArray *btnTitle = [[NSMutableArray alloc] initWithArray:@[@"转发", @"回复"]];
+            UIImage *redirectImg = [UIImage imageNamed:@"redirect.png"];
+            UIImage *replyImg = [UIImage imageNamed:@"reply.png"];
+            self.favImg = [UIImage imageNamed:@"like.png"];
+            self.unFavImg = [UIImage imageNamed:@"like_red.png"];
+            NSMutableArray *btnImage = [[NSMutableArray alloc] initWithArray:@[redirectImg, replyImg]];
             if (self.funTweet.favorited){
-                [btnTitle addObject:@"取消收藏"];
+                [btnImage addObject:self.unFavImg];
             }else{
-                [btnTitle addObject:@"收藏"];
+                [btnImage addObject:self.favImg];
             }
             NSMutableArray *btnArray = [[NSMutableArray alloc] init];
-            for (int i = 0; i < btnTitle.count; i++) {
-                UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithTitle:btnTitle[i] style:UIBarButtonItemStylePlain target:self action:@selector(barBtnItemClick:)];
+            for (int i = 0; i < btnImage.count; i++) {
+                UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithImage:btnImage[i] style:UIBarButtonItemStylePlain target:self action:@selector(barBtnItemClick:)];
                 btn.tag = i;
                 [btnArray addObject:btn];
-                if (i != btnTitle.count - 1){
+                if (i != btnImage.count - 1){
                     UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
                     [btnArray addObject:btn];
                 }
-                if (i == btnTitle.count - 1){
+                if (i == btnImage.count - 1){
                     self.favoriteButtonItem = btn;
                 }
             }
@@ -208,19 +214,13 @@ static NSString *redirectMsgAPI = @"";
  *  @param msgId <#msgId description#>
  */
 - (void)redirectMsg:(NSString *)msgId{
-    NSString *text = [NSString stringWithFormat:@"转%@ %@", self.funTweet.username, self.funTweet.content];
+    NSString *text = [NSString stringWithFormat:@"转@%@ %@", self.funTweet.username, self.funTweet.content];
     UIImage *image = nil;
     if (self.funTweet.photoUrl != nil && self.funTweet.photoUrl.length != 0){
         NSURL *url = [NSURL URLWithString:self.funTweet.photoUrl];
         NSData *data = [NSData dataWithContentsOfURL:url];
         image = [UIImage imageWithData:data];
     }
-    
-    NSString *url = @"http://api.fanfou.com/statuses/update.json?status=转飯否小字报 转@小吃轮 “爱一个人，是一件简单的事。就好像用杯子装满一杯水，清清凉凉地喝下去。你的身体需要它，感觉自己健康和愉悦。以此认定它是一个好习惯。所以愿意日日夜夜重复。”&oauth_signature=YSnrXG7LgYr%2FnEm8NoIXngFxHV4%3D&oauth_nonce=NXZGAGERZXFXGEPUYZZDCUWCYZWRSXXVOOCZKVAB&oauth_timestamp=1466340484&oauth_consumer_key=2c450ff5d3f7ee0a62348158b924a369&oauth_token=1277466-d4bf74db0b1a35b0a8e4af706e105c9b&oauth_signature_method=HMAC-SHA1";
-    
-    NSString *url2 = @"http://api.fanfou.com/statuses/update.json?status=我&oauth_signature=f6aMoVVIrTU3St7t39cptv%2BwoEc%3D&oauth_nonce=JNEHMLSIJGTMANUWCBKPYNKXXLQKSUHBUGCSGXHN&oauth_timestamp=1466342151&oauth_consumer_key=2c450ff5d3f7ee0a62348158b924a369&oauth_token=1277466-d4bf74db0b1a35b0a8e4af706e105c9b&oauth_signature_method=HMAC-SHA1";
-    
-    NSString *str = [[NSURL URLWithString:url2 relativeToURL:nil] absoluteString];
     
     [NetworkUtil postNewTweet:text image:image success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [[UIToast makeText:@"转发成功"] show];
@@ -235,6 +235,15 @@ static NSString *redirectMsgAPI = @"";
         }
 
     }];
+    
+//    [NetworkUtil postTweet:text image:image completeHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+//        if (error){
+//            NSLog(@"%@-%@ failure.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
+//            NSLog(@"response:%@", response);
+//        }else{
+//            [[UIToast makeText:@"转发成功"] show];
+//        }
+//    }];
 }
 
 /**
@@ -257,7 +266,8 @@ static NSString *redirectMsgAPI = @"";
         NSString *text = @"取消收藏成功";
         [[UIToast makeText:text] show];
 //        NSLog(@"%@", text);
-        self.favoriteButtonItem.title = @"收藏";
+//        self.favoriteButtonItem.title = @"收藏";
+        self.favoriteButtonItem.image = self.favImg;
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@-%@ failure:%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
         NSError *jsonError = nil;
@@ -292,7 +302,8 @@ static NSString *redirectMsgAPI = @"";
 //        NSLog(@"%@-%@ success:%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
         NSString *text = @"收藏成功";
         [[UIToast makeText:text] show];
-        self.favoriteButtonItem.title = @"取消收藏";
+//        self.favoriteButtonItem.title = @"取消收藏";
+        self.favoriteButtonItem.image = self.unFavImg;
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@-%@ failure:%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), operation.responseString);
         NSError *jsonError = nil;
