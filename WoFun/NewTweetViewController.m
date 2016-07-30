@@ -37,9 +37,10 @@
     self.navigationController.navigationBar.translucent = NO;
     
     UIBarButtonItem *picBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(photoPick:)];
+    UIBarButtonItem *locationBtn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"location.png"] style:UIBarButtonItemStylePlain target:self action:@selector(getLocation:)];
     UIBarButtonItem *spaceBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     UIBarButtonItem *postBtn = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(postTweet:)];
-    self.toolBar.items = @[picBtn, spaceBtn, postBtn];
+    self.toolBar.items = @[picBtn, locationBtn, spaceBtn, postBtn];
 
     self.tweetTxtView.delegate = self;
     
@@ -75,6 +76,15 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+/**
+ *  获取地理位置
+ *
+ *  @param sender <#sender description#>
+ */
+-(IBAction)getLocation:(id)sender{
+    
 }
 
 #pragma Subscribe keyboard show event

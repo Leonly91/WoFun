@@ -74,7 +74,18 @@ static NSString *tweetCellId = @"TweetViewCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.tabBarController.navigationItem.title = @"WoFun";
+//    self.tabBarController.navigationItem.title = @"WoFun";
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    titleView.backgroundColor = [UIColor clearColor];
+    UIButton *titleBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [titleBtn setTitle:@"WoFun" forState:UIControlStateNormal];
+    titleBtn.frame = titleView.frame;
+    UIFont *boldFont = [UIFont boldSystemFontOfSize:18];
+    [titleBtn.titleLabel setFont:boldFont];
+    [titleBtn addTarget:self action:@selector(titleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [titleView addSubview:titleBtn];
+    self.tabBarController.navigationItem.titleView = titleView;
+    
     UIImage *addImage = [UIImage imageNamed:@"write.png"];
     UIBarButtonItem *newFun = [[UIBarButtonItem alloc] initWithImage:addImage style:UIBarButtonItemStylePlain target:self action:@selector(newFun:)];
     self.tabBarController.navigationItem.rightBarButtonItem = newFun;
@@ -82,6 +93,10 @@ static NSString *tweetCellId = @"TweetViewCell";
     
 //    NSLog(@"TimeLineViewController %@. access_token = %@", NSStringFromSelector(_cmd), access_token);
     [self.tableView reloadData];
+}
+
+-(IBAction)titleBtnClick:(id)sender{
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
