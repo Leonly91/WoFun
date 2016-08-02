@@ -12,13 +12,16 @@
 #import "GlobalVar.h"
 #import <NSString+URLEncode.h>
 #import <UIToast.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface NewTweetViewController ()
+@interface NewTweetViewController () <CLLocationManagerDelegate>
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *imageUrl;
 @property (nonatomic) UIButton *delImgBtn;
 @property (nonatomic) NSUInteger textHeight;
+@property (nonatomic) UIBarButtonItem *locationTxt;
+@property (nonatomic) CLLocationManager *locationManager;
 @end
 
 //static NSString *postApi = @"http://rest.fanfou.com/statuses/";
@@ -38,9 +41,12 @@
     
     UIBarButtonItem *picBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(photoPick:)];
     UIBarButtonItem *locationBtn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"location.png"] style:UIBarButtonItemStylePlain target:self action:@selector(getLocation:)];
+    UIBarButtonItem *locatonTxt = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.locationTxt = locatonTxt;
+    self.locationTxt.enabled = NO;
     UIBarButtonItem *spaceBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     UIBarButtonItem *postBtn = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(postTweet:)];
-    self.toolBar.items = @[picBtn, locationBtn, spaceBtn, postBtn];
+    self.toolBar.items = @[picBtn, locationBtn, locatonTxt, spaceBtn, postBtn];
 
     self.tweetTxtView.delegate = self;
     
@@ -65,6 +71,14 @@
     [self.tweetTxtView performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
 }
 
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    if (self.locationManager != nil){
+        [self.locationManager stopUpdatingLocation];
+    }
+}
+
 -(void)viewDidDisappear:(BOOL)animated{
     [self unSubscribeKeyboardNotificaion];
 }
@@ -84,7 +98,50 @@
  *  @param sender <#sender description#>
  */
 -(IBAction)getLocation:(id)sender{
+    if (self.locationManager == nil){
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+        self.locationManager.distanceFilter = 500;
+    }
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
     
+    NSLog(@"%@-%@ call.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    NSLog(@"%@-%@ fail:%@.", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
+    NSString *toastText = [NSString stringWithFormat:@"获取地理位置失败:%ld", (long)error.code];
+    [[UIToast makeText:toastText] show];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    CLLocation *currLocation = [locations lastObject];
+    NSLog(@"%@-coordinate:%f-%f", NSStringFromSelector(_cmd), currLocation.coordinate.latitude, currLocation.coordinate.longitude);
+    
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        if (placemarks.count > 0){
+            CLPlacemark *placemark = [placemarks objectAtIndex:0];
+            NSLog(@"%@ name:%@", NSStringFromSelector(_cmd), placemark.name);
+            
+            NSString *city = placemark.locality;
+            if (!city){
+                city = placemark.administrativeArea;
+            }
+            NSLog(@"%@ count:%lu city:%@, country:%@", NSStringFromSelector(_cmd), placemarks.count ,city, placemark.country);
+            self.locationTxt.title = city;
+        }else if (error == nil){
+            [[UIToast makeText:@"返回结果为空"] show];
+        }else{
+            [[UIToast makeText:@"获取地理位置发生错误"] show];
+        }
+    }];
+    
+    [self.locationManager stopUpdatingLocation];
 }
 
 #pragma Subscribe keyboard show event
