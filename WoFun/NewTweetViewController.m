@@ -13,8 +13,10 @@
 #import <NSString+URLEncode.h>
 #import <UIToast.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
+#import <JZLocationConverter.h>
 
-@interface NewTweetViewController () <CLLocationManagerDelegate>
+@interface NewTweetViewController () <CLLocationManagerDelegate, MKMapViewDelegate>
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *imageUrl;
@@ -22,6 +24,8 @@
 @property (nonatomic) NSUInteger textHeight;
 @property (nonatomic) UIBarButtonItem *locationTxt;
 @property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) MKMapView *mapView;
+@property (nonatomic, copy) NSString *location;
 @end
 
 //static NSString *postApi = @"http://rest.fanfou.com/statuses/";
@@ -58,6 +62,16 @@
 //    NSLog(@"%@, %f", NSStringFromSelector(_cmd), self.tweetTxtView.frame.size.height);
     
     [self subscribeKeyboardNotificaion];
+    
+    if (self.mapView == nil){
+        self.mapView = [[MKMapView alloc] init];
+        self.mapView.hidden = YES;
+        self.mapView.userTrackingMode = MKUserTrackingModeFollowWithHeading;
+        self.mapView.delegate = self;
+    }
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
 }
 
 -(void)viewWillLayoutSubviews{
@@ -67,6 +81,8 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    [self.mapView setShowsUserLocation:YES];
     
     [self.tweetTxtView performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
 }
@@ -112,6 +128,34 @@
     NSLog(@"%@-%@ call.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 }
 
+-(IBAction)getLocation2:(id)sender{
+    [self.mapView setShowsUserLocation:YES];
+    NSLog(@"%@-%@ call.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+}
+
+-(void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    CLLocation *location = userLocation.location;
+    NSLog(@"coordinate:%f,%f", location.coordinate.latitude, location.coordinate.longitude);
+    
+    
+}
+
+-(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
+    NSLog(@"%@-%@ call.", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+}
+
+-(void)mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error{
+    NSLog(@"%@ error:%@.", NSStringFromSelector(_cmd), error);
+}
+
+-(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
+-(void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error{
+    NSLog(@"%@ error:%@.", NSStringFromSelector(_cmd), error);
+}
+
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"%@-%@ fail:%@.", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
     NSString *toastText = [NSString stringWithFormat:@"获取地理位置失败:%ld", (long)error.code];
@@ -120,9 +164,12 @@
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     CLLocation *currLocation = [locations lastObject];
-    NSLog(@"%@-coordinate:%f-%f", NSStringFromSelector(_cmd), currLocation.coordinate.latitude, currLocation.coordinate.longitude);
+    NSLog(@"%@-coordinate:count-%lu,%f-%f", NSStringFromSelector(_cmd), locations.count,currLocation.coordinate.latitude, currLocation.coordinate.longitude);
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    CLLocationCoordinate2D wgs84Location = CLLocationCoordinate2DMake(currLocation.coordinate.latitude, currLocation.coordinate.longitude);
+    CLLocationCoordinate2D gcj02Location = [JZLocationConverter gcj02ToWgs84:wgs84Location];
+    NSLog(@"gcj01Location:{%f-%f}", gcj02Location.latitude, gcj02Location.longitude);
     [geocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error) {
         if (placemarks.count > 0){
             CLPlacemark *placemark = [placemarks objectAtIndex:0];
@@ -134,6 +181,7 @@
             }
             NSLog(@"%@ count:%lu city:%@, country:%@", NSStringFromSelector(_cmd), placemarks.count ,city, placemark.country);
             self.locationTxt.title = city;
+            self.location = city;
         }else if (error == nil){
             [[UIToast makeText:@"返回结果为空"] show];
         }else{
@@ -224,7 +272,7 @@
         return ;
     }
     
-    [NetworkUtil postNewTweet:self.tweetTxtView.text image:self.image success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [NetworkUtil postNewTweet:self.tweetTxtView.text image:self.image location:self.location success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
         
         NSString *text = @"发送成功";

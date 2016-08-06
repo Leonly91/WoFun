@@ -222,7 +222,7 @@ static NSString *redirectMsgAPI = @"";
         image = [UIImage imageWithData:data];
     }
     
-    [NetworkUtil postNewTweet:text image:image success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [NetworkUtil postNewTweet:text image:image location:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [[UIToast makeText:@"转发成功"] show];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSError *jsonError = nil;

@@ -197,6 +197,7 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
 //使用AFN发推
 + (void)postNewTweet:(NSString *)text
                image:(UIImage *)image
+            location:(NSString *)location
              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
@@ -219,6 +220,10 @@ const NSUInteger NUMBER_OF_CHARS = 40 ;
     if (image != nil){
         apiUrl = photoApi;
     }
+    if (location != nil){
+        [parameters setObject:location forKey:@"location"];
+    }
+    
     NSString *signautre = [NetworkUtil postOauthSignature:apiUrl parameters:parameters secretKey:[NetworkUtil getAPISignSecret]];
     [parameters setObject:[signautre URLEncode] forKey:@"oauth_signature"];
     
