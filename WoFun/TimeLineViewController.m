@@ -63,6 +63,7 @@ static NSString *tweetCellId = @"TweetViewCell";
 -(IBAction)newFun:(id)sender{
     NewTweetViewController *newTweetVC = [[NewTweetViewController alloc] init];
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:newTweetVC];
+    nvc.navigationBar.translucent = NO;
     [self presentViewController:nvc animated:YES completion:nil];
 }
 

@@ -26,6 +26,7 @@
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) MKMapView *mapView;
 @property (nonatomic, copy) NSString *location;
+@property (nonatomic) CGFloat keyboardHeight;
 @end
 
 //static NSString *postApi = @"http://rest.fanfou.com/statuses/";
@@ -72,6 +73,8 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    
+    self.keyboardHeight = 0;
 }
 
 -(void)viewWillLayoutSubviews{
@@ -136,8 +139,6 @@
 -(void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     CLLocation *location = userLocation.location;
     NSLog(@"coordinate:%f,%f", location.coordinate.latitude, location.coordinate.longitude);
-    
-    
 }
 
 -(void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
@@ -301,6 +302,9 @@
     NSDictionary *info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
+    NSLog(@"%@.keyboard height:%f", NSStringFromSelector(_cmd), kbSize.height);
+    self.keyboardHeight = kbSize.height;
+    
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, kbSize.height, 0);
     _scrollView.contentInset = contentInsets;
     _scrollView.scrollIndicatorInsets = contentInsets;
@@ -319,6 +323,8 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     _scrollView.contentInset = contentInsets;
     _scrollView.scrollIndicatorInsets = contentInsets;
+    
+    self.keyboardHeight = 0;
 }
 
 /**
@@ -338,6 +344,24 @@
         self.imageView.frame = rect;
         [self.imageView setNeedsLayout];
     }
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+//    NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+//    NSLog(@"%@.%f.", NSStringFromSelector(_cmd), scrollView.contentInset.bottom);
+    //fix 滚动时toolbar被keyboard覆盖
+
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+//    NSLog(@"%@", NSStringFromSelector(_cmd));
+    CGFloat toolbarHeight = self.keyboardHeight > 0? (self.toolBar.frame.size.height) : 0;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, self.keyboardHeight + toolbarHeight, 0);
+    _scrollView.contentInset = contentInsets;
+    _scrollView.scrollIndicatorInsets = contentInsets;
 }
 
 /*

@@ -47,7 +47,7 @@
                                     </items>
                                 </toolbar>
                             </subviews>
-                            <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="800" id="2Lm-JZ-GIW"/>
                                 <constraint firstAttribute="trailing" secondItem="6WD-fI-eDc" secondAttribute="trailing" id="5ZT-vJ-MAB"/>
@@ -60,7 +60,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="qh2-mQ-W1T" secondAttribute="trailing" id="CCB-Z3-teo"/>
                         <constraint firstAttribute="centerX" secondItem="qh2-mQ-W1T" secondAttribute="centerX" id="MFi-oI-NNd"/>
