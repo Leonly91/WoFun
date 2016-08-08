@@ -147,9 +147,10 @@ static NSString *redirectMsgAPI = @"";
             UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width - 20, cell.bounds.size.height)];
             UIImage *redirectImg = [UIImage imageNamed:@"redirect.png"];
             UIImage *replyImg = [UIImage imageNamed:@"reply.png"];
+            UIImage *webchatImg = [UIImage imageNamed:@"webchat.png"];
             self.favImg = [UIImage imageNamed:@"like.png"];
             self.unFavImg = [UIImage imageNamed:@"like_red.png"];
-            NSMutableArray *btnImage = [[NSMutableArray alloc] initWithArray:@[redirectImg, replyImg]];
+            NSMutableArray *btnImage = [[NSMutableArray alloc] initWithArray:@[redirectImg, replyImg, webchatImg]];
             if (self.funTweet.favorited){
                 [btnImage addObject:self.unFavImg];
             }else{
@@ -186,6 +187,9 @@ static NSString *redirectMsgAPI = @"";
             [self replayMsg:self.funTweet.id];
             break;
         case 2:
+            
+            break;
+        case 3:
             if (!self.funTweet.favorited){
                 [self createFavorite:self.funTweet.id];
             }else{

@@ -56,7 +56,7 @@ static NSString *tweetCellId = @"TweetViewCell";
 }
 
 -(void)refresh:(id)sender{
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"%@-%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
     [self getTimeline];
 }
 
@@ -327,9 +327,26 @@ static NSString *tweetCellId = @"TweetViewCell";
     NSLog(@"%@ executes.access_token:%@, access_token_secret:%@", NSStringFromSelector(_cmd), access_token, access_token_secret);
     
     [NetworkUtil getTimeline:nil since_id:nil max_id:nil count:[NSNumber numberWithInt:30] page:[NSNumber numberWithInt:1] success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
+        NSLog(@"%@ success.%@", NSStringFromSelector(_cmd), operation.responseString);
 
         [self addObjects2DataSource:[NetworkUtil json2TweetArray:operation.responseString]];
+        
+        NSComparisonResult (^sortTweetsById)(id obj1, id obj2) = ^(id obj1, id obj2){
+            FunTweet *tweet1 = [[FunTweet alloc] initWithJson:(NSDictionary *)obj1];
+            FunTweet *tweet2 = [[FunTweet alloc] initWithJson:(NSDictionary *)obj2];
+            int rawId1 = [tweet1.rawId intValue];
+            int rawId2 = [tweet2.rawId intValue];
+            if (rawId1 > rawId2){
+                return NSOrderedAscending;
+            }else if (rawId1 < rawId2){
+                return NSOrderedDescending;
+            }else{
+                return NSOrderedSame;
+            }
+        };
+        NSArray *sortedArray = [self.tweetsArray sortedArrayUsingComparator:sortTweetsById];
+        [self.tweetsArray removeAllObjects];
+        [self.tweetsArray addObjectsFromArray:sortedArray];
 
         [self.refreshControl endRefreshing];
         [self.tableView reloadData];
@@ -337,6 +354,7 @@ static NSString *tweetCellId = @"TweetViewCell";
         NSLog(@"%@ failure.%@", NSStringFromSelector(_cmd), operation.responseString);
     }];
 }
+
 
 /**
  *  添加新的数据到数据源里：根据rawid查找是否已经存在

@@ -45,6 +45,7 @@
 		49B30E381D28F460000F766C /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B30E371D28F460000F766C /* ConversationViewController.m */; };
 		49B30E3B1D290FAA000F766C /* ConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B30E3A1D290FAA000F766C /* ConversationCell.m */; };
 		49B30E411D313DB2000F766C /* SearchFriendTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B30E401D313DB2000F766C /* SearchFriendTable.m */; };
+		49DC12281D57654D00743F09 /* webchat.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DC12271D57654D00743F09 /* webchat.png */; };
 		49F87B281C946257001F8006 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B271C946257001F8006 /* main.m */; };
 		49F87B2B1C946257001F8006 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2A1C946257001F8006 /* AppDelegate.m */; };
 		49F87B2E1C946257001F8006 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F87B2D1C946257001F8006 /* ViewController.m */; };
@@ -129,6 +130,7 @@
 		49B30E3A1D290FAA000F766C /* ConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationCell.m; sourceTree = "<group>"; };
 		49B30E3F1D313DB2000F766C /* SearchFriendTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFriendTable.h; sourceTree = "<group>"; };
 		49B30E401D313DB2000F766C /* SearchFriendTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFriendTable.m; sourceTree = "<group>"; };
+		49DC12271D57654D00743F09 /* webchat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = webchat.png; sourceTree = "<group>"; };
 		49F87B221C946257001F8006 /* WoFun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoFun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49F87B261C946257001F8006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49F87B271C946257001F8006 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 		4916D7C31CE23665008AE3BE /* images */ = {
 			isa = PBXGroup;
 			children = (
+				49DC12271D57654D00743F09 /* webchat.png */,
 				492A78E41D4A5D2E0001417B /* redirect.png */,
 				493671741D411FF30049B04F /* write.png */,
 				493671721D411FEB0049B04F /* profile2.png */,
@@ -432,6 +435,7 @@
 				4936715E1D3FD01A0049B04F /* reply.png in Resources */,
 				493671751D411FF30049B04F /* write.png in Resources */,
 				4936716D1D411FD30049B04F /* camera.png in Resources */,
+				49DC12281D57654D00743F09 /* webchat.png in Resources */,
 				4916D7C21CE23656008AE3BE /* delete-button.png in Resources */,
 				493671591D3FD01A0049B04F /* edit.png in Resources */,
 				49F87B361C946257001F8006 /* LaunchScreen.xib in Resources */,
